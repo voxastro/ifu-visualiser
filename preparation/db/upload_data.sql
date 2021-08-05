@@ -16,7 +16,7 @@ CREATE TABLE cube (
     exptime         real,
     manga_id        varchar(32),
     manga_plateifu  varchar(32),
-    sami_catid      bigint,
+    sami_catid      varchar(32),
     sami_cube       varchar(32),
     califa_id       integer,
     califa_name     varchar(32),
@@ -38,9 +38,9 @@ ANALYZE cube;
 -- Add Atlas3D table
 -- http://www-astro.physics.ox.ac.uk/atlas3d/tables/Cappellari2011a_Atlas3D_Paper1_Table3.txt
 
-DROP TABLE IF EXISTS atlas_sample CASCADE;
+DROP TABLE IF EXISTS atlas_param CASCADE;
 
-CREATE TABLE atlas_sample (
+CREATE TABLE atlas_param (
     atlas_name      varchar(32) PRIMARY KEY,
     ra              float(8),
     dec             float(8),
@@ -55,11 +55,11 @@ CREATE TABLE atlas_sample (
     logRe           real
 );
 
-\copy atlas_sample FROM '../atlas3d/Cappellari2011a_Atlas3D_Paper1_Table3.txt' DELIMITER ',' CSV HEADER;
+\copy atlas_param FROM '../atlas3d/Cappellari2011a_Atlas3D_Paper1_Table3.txt' DELIMITER ',' CSV HEADER;
 
-UPDATE atlas_sample SET atlas_name=REPLACE(atlas_name,' ','');
-ALTER TABLE atlas_sample ADD COLUMN cube_id integer REFERENCES cube (cube_id);
-UPDATE atlas_sample AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.atlas_name = c.atlas_name;
+UPDATE atlas_param SET atlas_name=REPLACE(atlas_name,' ','');
+ALTER TABLE atlas_param ADD COLUMN cube_id integer REFERENCES cube (cube_id);
+UPDATE atlas_param AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.atlas_name = c.atlas_name;
 
-ALTER TABLE atlas_sample OWNER TO ifu_user;
-ANALYZE atlas_sample;
+ALTER TABLE atlas_param OWNER TO ifu_user;
+ANALYZE atlas_param;

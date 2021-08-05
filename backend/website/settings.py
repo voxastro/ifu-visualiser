@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ifuapp'
+    'graphene_django',
+    'ifuapp',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,41 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_WHITELIST = [
     "https://ifu.voxastro.org",
 ]
+
+GRAPHENE = {
+    "SCHEMA": "ifuapp.schema.schema",
+    # defaults to schema.json,
+    'SCHEMA_OUTPUT': os.path.join(STATIC_ROOT, 'schema.json'),
+    # Defaults to None (displays all data on a single line)
+    'SCHEMA_INDENT': 2,
+}
+
+
+if DEBUG:
+    pass
+
+    # too slow... likely related to
+    # https://github.com/jazzband/django-debug-toolbar/issues/1402
+
+    # MIDDLEWARE += [
+    #     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #     # 'graphiql_debug_toolbar.middleware.DebugToolbarMiddleware',
+    # ]
+    # INSTALLED_APPS += [
+    #     'debug_toolbar',
+    #     # 'graphiql_debug_toolbar',
+    # ]
+
+    # import socket
+    # INTERNAL_IPS = ['127.0.0.1']
+    # hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    # INTERNAL_IPS += [ip[:-1] + '1' for ip in ips]
+
+    # PRETTIFY_SQL = False
+    # this is the main reason for not showing up the toolbar
+    # import mimetypes
+    # mimetypes.add_type("application/javascript", ".js", True)
+
+    # DEBUG_TOOLBAR_CONFIG = {
+    #     'INTERCEPT_REDIRECTS': False,
+    # }

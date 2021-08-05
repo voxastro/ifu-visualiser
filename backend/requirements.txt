@@ -8,3 +8,6 @@ django-cors-headers
 sqlparse==0.3.1
 git+https://github.com/ivan-katkov/django-custom-query.git#egg=django-custom-query
 requests
+graphene-django
+django-debug-toolbar
+django-graphiql-debug-toolbar
