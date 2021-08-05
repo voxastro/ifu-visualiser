@@ -48,7 +48,7 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
         w = WCS(hdr).dropaxis(-1)
         center = w.pixel_to_world(hdr['NAXIS1']/2.0, hdr['NAXIS2']/2.0)
         t.add_row((q+1, center.ra.deg, center.dec.deg, 'califa', file_noext,
-                  900*3, '', '', '', '', hdr['CALIFAID'], hdr['OBJECT'], file_noext.split('.')[1], ''))
+                  900*3, '', '', '', '', hdr['CALIFAID'], file_noext.split('.')[0], file_noext.split('.')[1], ''))
     elif 'atlas' in f:
         t.add_row((q+1, hdr['TCRVL6'], hdr['TCRVL7'], 'atlas3d', file_noext,
                   None, '', '', '', '', '', '', '', file_noext.split('_')[1]))
