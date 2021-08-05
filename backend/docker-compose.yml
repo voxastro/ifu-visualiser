@@ -11,9 +11,10 @@ services:
     volumes:
       - .:/code
     env_file: local.env
-    # command: bash -c "
-    #   python manage.py makemigrations &&
-    #   python manage.py migrate --noinput &&
-    #   python manage.py collectstatic --noinput --link -v 2 &&
-    #   gunicorn website.wsgi --reload --workers 4 --bind 0.0.0.0:8080 --timeout 60 --log-level debug --access-logfile -"
+    command: bash -c "
+      python manage.py makemigrations &&
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput --link -v 2 &&
+      gunicorn website.wsgi --reload --workers 4 --bind 0.0.0.0:8080 --timeout 60 --log-level debug --access-logfile -"
+    #   gunicorn website.wsgi --reload --workers 4 --bind 0.0.0.0:8080 --timeout 60 --log-level debug --access-logfile gunicorn_access.log --error-logfile gunicorn_error.log"
     restart: always

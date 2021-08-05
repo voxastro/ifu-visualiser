@@ -28,3 +28,9 @@ root@1b442659d63f:/code# python manage.py startapp ifuapp
 root@1b442659d63f:/code# ls
 Dockerfile  README.md  docker-compose.yml  ifuapp  local.env  manage.py  requirements.txt  website
 ```
+
+Let's start web service
+
+```shell
+$ docker compose up
+```
