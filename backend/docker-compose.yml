@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  ifu_api:
+    image: ifu_api
+    container_name: ifu_api
+    build: .
+    # network_mode: host
+    ports:
+      - '8080:8080'
+    volumes:
+      - .:/code
+    env_file: local.env
+    # command: bash -c "
+    #   python manage.py makemigrations &&
+    #   python manage.py migrate --noinput &&
+    #   python manage.py collectstatic --noinput --link -v 2 &&
+    #   gunicorn website.wsgi --reload --workers 4 --bind 0.0.0.0:8080 --timeout 60 --log-level debug --access-logfile -"
+    restart: always
