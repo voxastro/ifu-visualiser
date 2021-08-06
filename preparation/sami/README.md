@@ -30,3 +30,5 @@ SELECT * FROM sami_dr3.DensityCatDR3
 SELECT * FROM sami_dr3.InputCatClustersDR3
 SELECT * FROM sami_dr3.InputCatFiller
 ```
+
+Descriptions of tables and columns can be found on [Schema Browser page](https://datacentral.org.au/services/schema/#sami).
