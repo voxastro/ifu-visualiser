@@ -26,8 +26,11 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'api.ifu.voxastro.org', 'testserver']
-
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'testserver',
+    'ifu-dev.voxastro.org',
+]
 
 # Application definition
 
@@ -185,7 +188,7 @@ if DEBUG:
 #         'drf_ujson.renderers.UJSONRenderer',
 #     ),
 # }
-SILKY_INTERCEPT_PERCENT = 0
+SILKY_INTERCEPT_PERCENT = os.getenv('SILKY_INTERCEPT_PERCENT')
 SILKY_PYTHON_PROFILER = True
 SILKY_PYTHON_PROFILER_BINARY = True
 SILKY_META = True
