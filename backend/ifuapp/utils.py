@@ -14,8 +14,8 @@ def apply_search(queryset, search_query):
     """
     Function to make an arbitrarily queries. Applied to the main Cube table.
     """
-    print("==================================================")
-    print(search_query)
-    print("==================================================")
+    # print("==================================================")
+    # print(search_query)
+    # print("==================================================")
     qs = queryset.extra(where=[search_query])
     return qs

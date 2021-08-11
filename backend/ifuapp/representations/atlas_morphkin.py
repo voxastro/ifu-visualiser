@@ -5,6 +5,7 @@ from ifuapp.pagination import EnhancedPageNumberPagination
 from ifuapp.utils import npl
 from silk.profiling.profiler import silk_profile
 import serpy
+from rest_flex_fields import FlexFieldsModelSerializer
 
 import graphene
 from graphene_django import DjangoObjectType, DjangoListField
@@ -19,7 +20,7 @@ from ifuapp.models import AtlasMorphkin
 # REST DRF representation (Serializers and ViewSets)
 
 
-class AtlasMorphkinSerializer(serializers.ModelSerializer):
+class AtlasMorphkinSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = AtlasMorphkin
         fields = '__all__'

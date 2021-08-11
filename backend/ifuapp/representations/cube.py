@@ -5,6 +5,7 @@ from ifuapp.pagination import EnhancedPageNumberPagination
 from ifuapp.utils import npl
 from silk.profiling.profiler import silk_profile
 import serpy
+from rest_flex_fields import FlexFieldsModelSerializer
 
 import graphene
 from graphene_django import DjangoObjectType, DjangoListField
@@ -14,17 +15,24 @@ import graphene_django_optimizer as gql_optimizer
 
 from ifuapp.models import Cube
 from ifuapp.utils import apply_search
+from .atlas_param import AtlasParamSerializer
+from .atlas_morphkin import AtlasMorphkinSerializer
 
 ###############################################################################
 # REST DRF representation (Serializers and ViewSets)
 
 
-class CubeSerializer(serializers.ModelSerializer):
+class CubeSerializer(FlexFieldsModelSerializer):
     spectrum = serializers.SerializerMethodField()
 
     class Meta:
         model = Cube
         fields = '__all__'
+
+        expandable_fields = {
+            'atlas_param': (AtlasParamSerializer, {'many': True}),
+            'atlas_morphkin': (AtlasMorphkinSerializer, {'many': True})
+        }
 
     def get_spectrum(self, obj):
         return obj.get_spectrum()
