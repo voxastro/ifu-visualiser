@@ -1,6 +1,8 @@
 # Backend setup
 
-## Django installation
+## Django setup
+
+### Basic settings
 
 First, build a docker image with required Python packages.
 
@@ -33,4 +35,12 @@ Let's start web service
 
 ```shell
 $ docker compose up
+```
+
+### Django models and GraphQL
+
+We follow a DB-first approach. This means that we will set up Django models based on the existing Postgres database using `inspectdb` command.
+
+```shell
+$ docker compose exec ifu_api python manage.py inspectdb
 ```

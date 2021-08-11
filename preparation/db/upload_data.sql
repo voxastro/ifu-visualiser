@@ -35,13 +35,15 @@ CLUSTER cube_q3c_ang2ipix_idx ON cube;
 ANALYZE cube;
 
 -------------------------------------------------------------------------------
--- Add Atlas3D table
+-------------------------------------------------------------------------------
+-- Add Atlas3D tables
+
 -- http://www-astro.physics.ox.ac.uk/atlas3d/tables/Cappellari2011a_Atlas3D_Paper1_Table3.txt
 
 DROP TABLE IF EXISTS atlas_param CASCADE;
 
 CREATE TABLE atlas_param (
-    atlas_name      varchar(32) PRIMARY KEY,
+    atlas_name      varchar(16) PRIMARY KEY,
     ra              float(8),
     dec             float(8),
     sbf             integer,
@@ -63,3 +65,42 @@ UPDATE atlas_param AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.atlas_name 
 
 ALTER TABLE atlas_param OWNER TO ifu_user;
 ANALYZE atlas_param;
+
+
+
+
+-- http://www-astro.physics.ox.ac.uk/atlas3d/tables/Cappellari2011a_Atlas3D_Paper1_Table3.txt
+
+DROP TABLE IF EXISTS atlas_morphkin CASCADE;
+
+CREATE TABLE atlas_morphkin (
+    atlas_name      varchar(16) PRIMARY KEY REFERENCES atlas_param (atlas_name),
+    pa_phot         real,
+    e_PAphot        real,
+    eps             real,
+    e_eps           real,
+    pa_kin          real,
+    e_pa_kin        real,
+    psi             real,
+    k51             real,
+    e_k51           real,
+    max_k1          real,
+    morph           varchar(16),
+    dust            varchar(16),
+    kin_struct      varchar(16),
+    kin_group       varchar(16)
+);
+
+\copy atlas_morphkin FROM '../atlas3d/Krajnovic2011_Atlas3D_Paper2_TableD1.txt' DELIMITER ',' CSV HEADER;
+
+UPDATE atlas_morphkin SET atlas_name=REPLACE(atlas_name,' ','');
+UPDATE atlas_morphkin SET morph=REPLACE(morph,' ','');
+UPDATE atlas_morphkin SET dust=REPLACE(dust,' ','');
+UPDATE atlas_morphkin SET kin_struct=REPLACE(kin_struct,' ','');
+UPDATE atlas_morphkin SET kin_group=REPLACE(kin_group,' ','');
+
+ALTER TABLE atlas_morphkin ADD COLUMN cube_id integer REFERENCES cube (cube_id);
+UPDATE atlas_morphkin AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.atlas_name = c.atlas_name;
+
+ALTER TABLE atlas_morphkin OWNER TO ifu_user;
+ANALYZE atlas_morphkin;

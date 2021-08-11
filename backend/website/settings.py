@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'api.ifu.voxastro.org']
+ALLOWED_HOSTS = ['127.0.0.1', 'api.ifu.voxastro.org', 'testserver']
 
 
 # Application definition
@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
+    'rest_framework',
+    'silk',
+    'djangoql',
     'ifuapp',
 ]
 
@@ -51,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.gzip.GZipMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'website.urls'
@@ -174,3 +179,29 @@ if DEBUG:
     # DEBUG_TOOLBAR_CONFIG = {
     #     'INTERCEPT_REDIRECTS': False,
     # }
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_RENDERER_CLASSES': (
+#         'drf_ujson.renderers.UJSONRenderer',
+#     ),
+# }
+SILKY_INTERCEPT_PERCENT = 0
+SILKY_PYTHON_PROFILER = True
+SILKY_PYTHON_PROFILER_BINARY = True
+SILKY_META = True
+SILKY_ANALYZE_QUERIES = True
+SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'profs')
+SILKY_DYNAMIC_PROFILING = [
+    {
+        'module': 'ifuapp.models.cube.CubeViewSet',
+        'function': 'list'
+    },
+    {
+        'module': 'ifuapp.models.cube.Cube2ViewSet',
+        'function': 'list'
+    },
+    {
+        'module': 'ifuapp.models.cube.Cube3ViewSet',
+        'function': 'list'
+    },
+]
