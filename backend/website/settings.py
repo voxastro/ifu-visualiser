@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'testserver',
     'ifu-dev.voxastro.org',
+    'nice-dev.voxastro.org',
 ]
 
 # Application definition
