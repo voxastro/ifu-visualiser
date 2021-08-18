@@ -1,7 +1,6 @@
 import numpy as np
 from django.db import models
 from ifuapp.utils import npl
-from djangoql.queryset import DjangoQLQuerySet
 
 
 class Cube(models.Model):
@@ -37,7 +36,6 @@ class Cube(models.Model):
 
         return dict(spec=npl(spec), err=npl(err), meta=dict(objname="SomeGalaxy", header=None))
 
-    objects = DjangoQLQuerySet.as_manager()
 
 
 class AtlasParam(models.Model):

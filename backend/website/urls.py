@@ -19,15 +19,11 @@ from django.conf import settings
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import routers
-from ifuapp.representations import CubeViewSet, Cube2ViewSet, Cube3ViewSet
-# from ifuapp.cube import CubeViewSet
+from ifuapp.representations import CubeViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'cubes', CubeViewSet, basename="cube")
-router.register(r'cubes2', Cube2ViewSet)
-router.register(r'cubes3', Cube3ViewSet)
-# router.register(r'cubes', CubeViewSet)
 
 
 urlpatterns = [
@@ -35,11 +31,4 @@ urlpatterns = [
     path('silk/', include('silk.urls', namespace='silk')),
     path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/', include(router.urls)),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
-
-# if settings.DEBUG:
-#     import debug_toolbar
-#     urlpatterns = [
-#         path('__debug__/', include(debug_toolbar.urls)),
-#     ] + urlpatterns

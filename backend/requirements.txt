@@ -21,3 +21,5 @@ drf-flex-fields
 graphene-django
 graphene-django-optimizer
 django-graphiql-debug-toolbar
+pglast
+sqlparse
