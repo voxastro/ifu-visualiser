@@ -33,8 +33,8 @@ jobs:
           cd q3c
           make
           make install
-          psql -h postgres -U postgres -c 'select q3c_version();'
           psql -h postgres -U postgres -c 'create extension q3c;'
+          psql -h postgres -U postgres -c 'select q3c_version();'
       - name: Test database
         env:
           PGPASSWORD: postgres
