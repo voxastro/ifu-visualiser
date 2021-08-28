@@ -2,7 +2,7 @@ name: IFU visualiser backend
 on: push
 
 jobs:
-  test_application:
+  test_backend:
     runs-on: ubuntu-latest
 
     container:
@@ -20,18 +20,28 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      PGPASSWORD: postgres
     steps:
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+      - name: Install q3c Postgres extension
+        run: |
+          git clone https://github.com/segasai/q3c.git
+          cd q3c
+          make
+          make install
+          psql postgresql://postgres:postgres@localhost:5432/postgres -c 'select q3c_version();'
+      - name: Test database
+        run: psql -h postgres -U postgres -c 'SELECT 1;'
+        env:
+          PGPASSWORD: postgres
+        
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
       #   run: |
       #     python -c "import sys; print(sys.version)"
       #     pip install -U pip
       #     pip install -r backend/requirements.txt
-      - name: Install PostgreSQL client
-        run: |
-          apt-get update
-          apt-get install --yes postgresql-client
-      - name: Test database
-        run: psql -h postgres -U postgres -c 'SELECT 1;'
-        env:
-          PGPASSWORD: postgres
