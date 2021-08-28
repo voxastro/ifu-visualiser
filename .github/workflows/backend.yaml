@@ -1,0 +1,35 @@
+name: IFU visualiser backend
+on: push
+
+jobs:
+  test_application:
+    runs-on: ubuntu-latest
+
+    container:
+      image: python:3.7
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      # - uses: actions/checkout@v2
+      # - name: Install dependencies from requirements.txt
+      #   run: |
+      #     python -c "import sys; print(sys.version)"
+      #     pip install -U pip
+      #     pip install -r backend/requirements.txt
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+      - name: Test database
+        run: psql -h postgres -U postgres -c 'SELECT 1;'
