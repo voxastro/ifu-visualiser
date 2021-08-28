@@ -10,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:11
+        image: postgres:12
         env:
           POSTGRES_PASSWORD: postgres
         ports:
@@ -26,7 +26,7 @@ jobs:
       - name: Install PostgreSQL dev version and client
         run: |
           apt-get update
-          apt-get install --yes postgresql-client postgresql-server-dev-11
+          apt-get install --yes postgresql-client postgresql postgresql-contrib postgresql-server-dev-12
       - name: Install q3c Postgres extension
         run: |
           git clone https://github.com/segasai/q3c.git
