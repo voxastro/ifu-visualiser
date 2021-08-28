@@ -10,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12
+        image: postgres
         env:
           POSTGRES_PASSWORD: postgres
         ports:
@@ -20,8 +20,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    env:
-      PGPASSWORD: postgres
     steps:
       - name: Install PostgreSQL dev version and client
         run: |
@@ -33,7 +31,9 @@ jobs:
           cd q3c
           make
           make install
-          psql postgresql://postgres:postgres@localhost:5432/postgres -c 'select q3c_version();'
+          psql -h postgres -U postgres -c 'select q3c_version();'
+        env:
+          PGPASSWORD: postgres
       - name: Test database
         run: psql -h postgres -U postgres -c 'SELECT 1;'
         env:
