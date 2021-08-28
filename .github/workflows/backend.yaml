@@ -34,4 +34,4 @@ jobs:
       - name: Test database
         run: psql -h postgres -U postgres -c 'SELECT 1;'
         env:
-          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
