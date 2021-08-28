@@ -23,13 +23,12 @@ jobs:
     env:
       PGPASSWORD: postgres
     steps:
-      - name: Install PostgreSQL client
+      - name: Install PostgreSQL dev version and client
         run: |
           apt-get update
-          apt-get install --yes postgresql-client
+          apt-get install --yes postgresql-client postgresql-server-dev-11
       - name: Install q3c Postgres extension
         run: |
-          apt-get install --yes postgresql-server-dev-11
           git clone https://github.com/segasai/q3c.git
           cd q3c
           make
@@ -39,7 +38,7 @@ jobs:
         run: psql -h postgres -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: postgres
-        
+
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
       #   run: |
