@@ -26,18 +26,19 @@ jobs:
           apt-get update
           apt-get install --yes postgresql-client postgresql postgresql-contrib postgresql-server-dev-all
       - name: Install q3c Postgres extension
+        env:
+          PGPASSWORD: postgres
         run: |
           git clone https://github.com/segasai/q3c.git
           cd q3c
           make
           make install
           psql -h postgres -U postgres -c 'select q3c_version();'
-        env:
-          PGPASSWORD: postgres
+          psql -h postgres -U postgres -c 'create extension q3c;'
       - name: Test database
-        run: psql -h postgres -U postgres -c 'SELECT 1;'
         env:
           PGPASSWORD: postgres
+        run: psql -h postgres -U postgres -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
