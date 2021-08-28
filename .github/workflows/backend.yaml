@@ -29,6 +29,7 @@ jobs:
           apt-get install --yes postgresql-client
       - name: Install q3c Postgres extension
         run: |
+          apt-get install --yes postgresql-server-dev
           git clone https://github.com/segasai/q3c.git
           cd q3c
           make
