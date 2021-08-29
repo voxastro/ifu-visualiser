@@ -13,8 +13,8 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
+#         ports:
+#           - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -53,6 +53,8 @@ jobs:
       - name: Testing database
         env:
           PGPASSWORD: postgres
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
         run: |
           pg_isready
           psql -U postgres -c 'SELECT 1;'
