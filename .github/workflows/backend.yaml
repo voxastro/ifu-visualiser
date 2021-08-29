@@ -23,7 +23,7 @@ jobs:
           --name db
     steps:
       - name: test Postgres
-        run: docker exec -it db pwd
+        run: docker exec -t db pwd
       # - name: Install PostgreSQL dev version and client
       #   run: |
       #     apt-get update
