@@ -22,7 +22,7 @@ jobs:
           --health-retries 5
           --name db
     steps:
-      - name: Install q3c Postgres Extension
+      - name: Installing q3c extension in postgres container
         run: docker exec -t db sh -c \
           "apt-get -qq update;
            apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev;
@@ -31,7 +31,11 @@ jobs:
            make;
            make install
            "
-   
+      - name: Installing Postgres client (psql)
+        run: |
+          apt-get update -qq
+          apt-get install -qq postgresql-client
+    
       # - name: Install PostgreSQL dev version and client
       #   run: |
       #     apt-get update
@@ -46,10 +50,10 @@ jobs:
       #     make install
       #     psql -h postgres -U postgres -c 'create extension q3c;'
       #     psql -h postgres -U postgres -c 'select q3c_version();'
-      # - name: Test database
-      #   env:
-      #     PGPASSWORD: postgres
-      #   run: psql -h postgres -U postgres -c 'SELECT 1;'
+      - name: Testing database
+        env:
+          PGPASSWORD: postgres
+        run: psql -h postgres -U postgres -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
