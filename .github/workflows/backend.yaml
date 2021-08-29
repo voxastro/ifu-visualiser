@@ -22,7 +22,9 @@ jobs:
           --health-retries 5
           --name db
         command: bash -c "ls; pwd"
-#     steps:
+    steps:
+      -name: Bla
+        run: echo Bla-bla
 #       - name: Install q3c Postgres Extension
 #         run: docker exec -t db sh -c \
 #           "apt-get -qq update; \
