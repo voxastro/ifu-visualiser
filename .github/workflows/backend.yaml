@@ -25,7 +25,12 @@ jobs:
       - name: Install q3c Postgres Extension
         run: docker exec -t db sh -c \
           "apt-get -qq update;
-           apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev"
+           apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev;
+           git clone https://github.com/segasai/q3c.git;
+           cd q3c;
+           make;
+           make install
+           "
    
       # - name: Install PostgreSQL dev version and client
       #   run: |
