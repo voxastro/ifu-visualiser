@@ -53,7 +53,7 @@ jobs:
       - name: Testing database
         env:
           PGPASSWORD: postgres
-        run: psql -h postgres -U postgres -c 'SELECT 1;'
+        run: psql -h db -U postgres -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
