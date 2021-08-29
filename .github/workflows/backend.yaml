@@ -56,7 +56,6 @@ jobs:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
         run: |
-          pg_isready
           psql -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
