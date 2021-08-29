@@ -50,18 +50,16 @@ jobs:
       #     make install
       #     psql -h postgres -U postgres -c 'create extension q3c;'
       #     psql -h postgres -U postgres -c 'select q3c_version();'
-      - name: Testing database
-#         env:
-#           PGPASSWORD: postgres
-#           PGHOST: localhost
-#           PGPORT: 5432
-#           PGUSER: postgres
-#           PGDATABASE: postgres
-        run: |
-          psql postgresql://postgres:postgres@localhost:5432/postgres -c \
-            'SELECT 1;'
 
-# psql -c 'SELECT 1;'
+      - name: Testing database
+        run: psql postgresql://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
+
+      - name: Checking q3c extension availability
+        run: psql postgresql://postgres:postgres@localhost:5432/postgres -c \
+          "create extension q3c;
+           select q3c_version();"
+
+        
 
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
