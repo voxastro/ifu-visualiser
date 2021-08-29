@@ -50,7 +50,7 @@ jobs:
 
       - name: Populate database
         run: |
-          cd preparation/backend
+          cd preparation/db
           psql postgresql://postgres:postgres@localhost:5432/postgres -i upload_data.sql
           psql postgresql://postgres:postgres@localhost:5432/postgres -c "\dt+"
           
