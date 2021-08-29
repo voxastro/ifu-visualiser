@@ -21,14 +21,11 @@ jobs:
           --health-timeout 5s
           --health-retries 5
           --name db
-        command: bash -c "ls; pwd"
     steps:
-      - name: Bla
-        run: ls
-#       - name: Install q3c Postgres Extension
-#         run: docker exec -t db sh -c \
-#           "apt-get -qq update; \
-#            apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev"
+      - name: Install q3c Postgres Extension
+        run: docker exec -t db sh -c \
+          "apt-get -qq update;
+           apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev"
    
       # - name: Install PostgreSQL dev version and client
       #   run: |
