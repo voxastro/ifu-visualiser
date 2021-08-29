@@ -23,7 +23,7 @@ jobs:
           --name db
         command: bash -c "ls; pwd"
     steps:
-      -name: Bla
+      - name: Bla
         run: ls
 #       - name: Install q3c Postgres Extension
 #         run: docker exec -t db sh -c \
