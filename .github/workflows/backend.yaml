@@ -31,7 +31,7 @@ jobs:
 #            make;
 #            make install
 #            "
-    -steps:
+    steps:
       - name: Installing Postgres client (psql)
         run: |
           apt-get -qq update;
