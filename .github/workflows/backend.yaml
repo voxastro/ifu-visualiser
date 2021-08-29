@@ -55,6 +55,8 @@ jobs:
           PGPASSWORD: postgres
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
         run: |
           psql postgresql://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
           psql -c 'SELECT 1;'
