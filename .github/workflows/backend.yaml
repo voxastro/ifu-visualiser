@@ -13,8 +13,8 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
-#         ports:
-#           - 5432:5432
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -56,6 +56,7 @@ jobs:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
         run: |
+          psql postgresql://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
           psql -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
