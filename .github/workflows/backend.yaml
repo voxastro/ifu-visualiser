@@ -24,7 +24,7 @@ jobs:
         command: bash -c "ls; pwd"
     steps:
       -name: Bla
-        run: echo Bla-bla
+        run: ls
 #       - name: Install q3c Postgres Extension
 #         run: docker exec -t db sh -c \
 #           "apt-get -qq update; \
