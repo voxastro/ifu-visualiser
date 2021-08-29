@@ -57,7 +57,7 @@ jobs:
           POSTGRES_PORT: 5432
         run: |
           pg_isready
-          psql -U postgres -c 'SELECT 1;'
+          psql -U localhost -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
