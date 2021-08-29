@@ -53,10 +53,10 @@ jobs:
       - name: Testing database
         env:
           PGPASSWORD: postgres
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGDATABASE: postgres
         run: |
           psql postgresql://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
           psql -c 'SELECT 1;'
