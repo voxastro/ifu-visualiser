@@ -53,11 +53,11 @@ jobs:
       - name: Testing database
         env:
           PGPASSWORD: postgres
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
         run: |
           pg_isready
-          psql -U localhost -c 'SELECT 1;'
+          psql -c 'SELECT 1;'
 
       # - uses: actions/checkout@v2
       # - name: Install dependencies from requirements.txt
