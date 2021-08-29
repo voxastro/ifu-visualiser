@@ -50,8 +50,10 @@ jobs:
 
       - name: Populate database
         run: |
-          pwd
-          ls
+          cd preparation/backend
+          psql postgresql://postgres:postgres@localhost:5432/postgres -i upload_data.sql
+          psql postgresql://postgres:postgres@localhost:5432/postgres -c "\dt+"
+          
           
 
 
