@@ -43,10 +43,21 @@ jobs:
         run: psql postgresql://postgres:postgres@localhost:5432/postgres -c \
           "create extension q3c;
            select q3c_version();"
+      
+      - name: Checkout repo
+        uses: actions/checkout@v2
+  
 
-      - uses: actions/checkout@v2
-      - name: Install dependencies from requirements.txt
+      - name: Populate database
         run: |
-          python -c "import sys; print(sys.version)"
-          pip install -U pip
-          pip install -r backend/requirements.txt
+          pwd
+          ls
+          
+
+
+#       
+#       - name: Install dependencies from requirements.txt
+#         run: |
+#           python -c "import sys; print(sys.version)"
+#           pip install -U pip
+#           pip install -r backend/requirements.txt
