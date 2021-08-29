@@ -36,21 +36,6 @@ jobs:
           sudo apt-get -qq update;
           sudo apt-get -y install postgresql-client
     
-      # - name: Install PostgreSQL dev version and client
-      #   run: |
-      #     apt-get update
-      #     apt-get install --yes postgresql-client postgresql postgresql-contrib postgresql-server-dev-all
-      # - name: Install q3c Postgres extension
-      #   env:
-      #     PGPASSWORD: postgres
-      #   run: |
-      #     git clone https://github.com/segasai/q3c.git
-      #     cd q3c
-      #     make
-      #     make install
-      #     psql -h postgres -U postgres -c 'create extension q3c;'
-      #     psql -h postgres -U postgres -c 'select q3c_version();'
-
       - name: Testing database
         run: psql postgresql://postgres:postgres@localhost:5432/postgres -c 'SELECT 1;'
 
@@ -59,11 +44,9 @@ jobs:
           "create extension q3c;
            select q3c_version();"
 
-        
-
-      # - uses: actions/checkout@v2
-      # - name: Install dependencies from requirements.txt
-      #   run: |
-      #     python -c "import sys; print(sys.version)"
-      #     pip install -U pip
-      #     pip install -r backend/requirements.txt
+      - uses: actions/checkout@v2
+      - name: Install dependencies from requirements.txt
+        run: |
+          python -c "import sys; print(sys.version)"
+          pip install -U pip
+          pip install -r backend/requirements.txt
