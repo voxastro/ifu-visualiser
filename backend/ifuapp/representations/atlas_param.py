@@ -11,7 +11,6 @@ import graphene
 from graphene_django import DjangoObjectType, DjangoListField
 from graphene.types.generic import GenericScalar
 from graphene_django_pagination import DjangoPaginationConnectionField
-import graphene_django_optimizer as gql_optimizer
 
 from ifuapp.models import AtlasParam
 
