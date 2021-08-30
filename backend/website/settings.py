@@ -189,7 +189,8 @@ if DEBUG:
 #         'drf_ujson.renderers.UJSONRenderer',
 #     ),
 # }
-SILKY_INTERCEPT_PERCENT = int(os.getenv('SILKY_INTERCEPT_PERCENT'))
+sip = os.getenv('SILKY_INTERCEPT_PERCENT')
+SILKY_INTERCEPT_PERCENT = 0 if sip is None else int(sip)
 SILKY_PYTHON_PROFILER = True
 SILKY_PYTHON_PROFILER_BINARY = True
 SILKY_META = True
