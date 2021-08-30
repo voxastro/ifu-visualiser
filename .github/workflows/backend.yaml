@@ -63,10 +63,11 @@ jobs:
 
 
       - name: Run api application
+        id: runapi
         run: |
           cd backend
           python manage.py makemigrations
           python manage.py migrate --noinput
           python manage.py collectstatic --noinput --link -v 2
           gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8000 --timeout 180 --log-level debug --access-logfile - --error-logfile - &
-          curl -v http://localhost:8000
+          curl -v runapi:8000
