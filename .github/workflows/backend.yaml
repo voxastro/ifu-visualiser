@@ -95,4 +95,4 @@ jobs:
         run: |
           cd e2e
           touch local.env
-          docker compose up --exit-code-from cypress
+          docker-compose up --exit-code-from cypress
