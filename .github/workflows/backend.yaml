@@ -5,9 +5,6 @@ jobs:
   test_backend:
     runs-on: ubuntu-latest
 
-    # container:
-    #   image: python:3.7
-
     services:
       postgres:
         image: katkov/postgres_q3c
@@ -23,29 +20,29 @@ jobs:
           --health-timeout 5s
           --health-retries 5
           --name db
+    env:
+    # semi-fake content of local.env file used for passing secrets into Docker container
+      DJANGO_SECRET_KEY: topsecret
+      DJANGO_DEBUG: True
+      DB_HOST: localhost
+      DB_USER: ifu_user
+      DB_PASSWORD: postgres
+      DB_NAME: ifu_db
+      DB_PORT: 5435
+      SILKY_INTERCEPT_PERCENT: 0
+
     steps:
-#       - name: Installing q3c extension in postgres container
-#         run: docker exec -t db sh -c \
-#           "apt-get -qq update;
-#            apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev;
-#            git clone https://github.com/segasai/q3c.git;
-#            cd q3c;
-#            make;
-#            make install
-#            "
-      - name: Installing Postgres client (psql)
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+
+      - name: Install Postgres client (psql) and test DB and q3c extension availability
         run: |
           sudo apt-get -qq update;
           sudo apt-get -y install postgresql-client
-    
-      - name: Testing database
-        run: psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c 'SELECT 1;'
-
-      - name: Checking q3c extension availability
-        run: psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "select q3c_version();"
-      
-      - name: Checkout repo
-        uses: actions/checkout@v2
+          psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c 'SELECT 1;'
+          psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "select q3c_version();"
   
 
       - name: Populate database
