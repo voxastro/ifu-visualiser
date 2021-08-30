@@ -48,7 +48,7 @@ jobs:
       - name: Start Docker daemon with app
         run: |
           cd backend
-          docker-compose up -d 
+          docker-compose --env-file - up -d 
 
 #       - name: Cache python deps
 #         uses: actions/cache@v2
