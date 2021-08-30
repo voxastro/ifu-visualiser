@@ -56,12 +56,17 @@ jobs:
           psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "\i upload_data.sql"
           psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "\dt+"
           
-          
+      
+      - name: Install dependencies from requirements.txt
+        run: |
+          python -c "import sys; print(sys.version)"
+          pip install -U pip
+          pip install -r backend/requirements.txt
 
-
-#       
-#       - name: Install dependencies from requirements.txt
-#         run: |
-#           python -c "import sys; print(sys.version)"
-#           pip install -U pip
-#           pip install -r backend/requirements.txt
+      - name: Run api application
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate --noinput
+          python manage.py collectstatic --noinput --link -v 2
+          gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8000 --timeout 180 --log-level debug --access-logfile - --error-logfile - &
+          curl -v 127.0.0.1:8080/api/
