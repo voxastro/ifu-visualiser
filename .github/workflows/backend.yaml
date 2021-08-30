@@ -10,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: katkov/postgres_q3c
         env:
           POSTGRES_USER: ifu_user
           POSTGRES_DB: ifu_db
@@ -24,15 +24,15 @@ jobs:
           --health-retries 5
           --name db
     steps:
-      - name: Installing q3c extension in postgres container
-        run: docker exec -t db sh -c \
-          "apt-get -qq update;
-           apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev;
-           git clone https://github.com/segasai/q3c.git;
-           cd q3c;
-           make;
-           make install
-           "
+#       - name: Installing q3c extension in postgres container
+#         run: docker exec -t db sh -c \
+#           "apt-get -qq update;
+#            apt-get install -qq git make gcc postgresql-server-dev-all libssl-dev libz-dev libreadline-dev;
+#            git clone https://github.com/segasai/q3c.git;
+#            cd q3c;
+#            make;
+#            make install
+#            "
       - name: Installing Postgres client (psql)
         run: |
           sudo apt-get -qq update;
