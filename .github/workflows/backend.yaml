@@ -42,9 +42,7 @@ jobs:
         run: psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c 'SELECT 1;'
 
       - name: Checking q3c extension availability
-        run: psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c \
-          "create extension q3c;
-           select q3c_version();"
+        run: psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "select q3c_version();"
       
       - name: Checkout repo
         uses: actions/checkout@v2
