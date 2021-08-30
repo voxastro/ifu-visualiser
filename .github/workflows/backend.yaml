@@ -65,6 +65,7 @@ jobs:
 
       - name: Run api application
         run: |
+          cd backend
           python manage.py makemigrations
           python manage.py migrate --noinput
           python manage.py collectstatic --noinput --link -v 2
