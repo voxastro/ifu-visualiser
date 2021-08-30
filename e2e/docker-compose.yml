@@ -20,7 +20,7 @@ services:
     container_name: cypress
     image: cypress/included:8.3.1
     depends_on:
-      - web
+      - testserver
     environment:
       - CYPRESS_baseUrl=http://testserver:8080
     working_dir: /e2e
