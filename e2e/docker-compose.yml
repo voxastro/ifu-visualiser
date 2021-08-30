@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  testserver:
+    container_name: testserver
+    build: ../backend/
+    ports:
+      - '8080:8080'
+    volumes:
+      - ../backend/:/code
+    env_file: ../backend/local.env
+    command: bash -c "
+      python manage.py makemigrations &&
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput --link -v 2 &&
+      gunicorn website.wsgi --reload --workers 4 --bind 0.0.0.0:8080 --timeout 180 --log-level debug --access-logfile - --error-logfile -"
+    restart: always
+
+  cypress:
+    container_name: cypress
+    image: cypress/included:8.3.1
+    depends_on:
+      - web
+    environment:
+      - CYPRESS_baseUrl=http://testserver:8080
+    working_dir: /e2e
+    volumes:
+      - .:/e2e
