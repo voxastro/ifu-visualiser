@@ -4,7 +4,7 @@ on: push
 jobs:
   test_backend:
     runs-on: ubuntu-latest
-    container: cypress/included:8.3.1
+#     container: cypress/included:8.3.1
     env:
     # semi-fake content of local.env file used for passing secrets into Docker container
       DJANGO_SECRET_KEY: topsecret
@@ -61,32 +61,43 @@ jobs:
 #           docker ps
 #           docker exec -t ifu_api curl localhost:8080
 
-      - name: Cache python deps
-        uses: actions/cache@v2
-        id: cache-pip
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+#       - name: Cache python deps
+#         uses: actions/cache@v2
+#         id: cache-pip
+#         with:
+#           path: ~/.cache/pip
+#           key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+#           restore-keys: |
+#             ${{ runner.os }}-pip-
       
-      - name: Install dependencies from requirements.txt
-        if: steps.cache-pip.outputs.cache-hit != 'true'
-        run: |
-          python -c "import sys; print(sys.version)"
-          pip install -U pip
-          pip install -r backend/requirements.txt
+#       - name: Install dependencies from requirements.txt
+#         if: steps.cache-pip.outputs.cache-hit != 'true'
+#         run: |
+#           python -c "import sys; print(sys.version)"
+#           pip install -U pip
+#           pip install -r backend/requirements.txt
 
 
-      - name: Run api application
-        run: |
-          cd backend
-          python manage.py makemigrations
-          python manage.py migrate --noinput
-          python manage.py collectstatic --noinput --link -v 2
-          gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8000 --timeout 180 --log-level debug --access-logfile - --error-logfile - &
+#       - name: Run api application
+#         run: |
+#           cd backend
+#           python manage.py makemigrations
+#           python manage.py migrate --noinput
+#           python manage.py collectstatic --noinput --link -v 2
+#           gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8000 --timeout 180 --log-level debug --access-logfile - --error-logfile - &
       
-      - name: Test API Cypress
-        uses: cypress-io/github-action@v2
-        with:
-          spec: e2e/cypress/integration/spec.js
+#       - name: Test API Cypress
+#         uses: cypress-io/github-action@v2
+#         with:
+#           spec: e2e/cypress/integration/spec.js
+          
+#### Cypress in Docker container
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+
+      - name: Start Docker daemon with app
+        run: |
+          cd e2e
+          docker compose up --exit-code-from cypress
