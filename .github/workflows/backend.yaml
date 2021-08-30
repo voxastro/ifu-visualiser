@@ -49,7 +49,8 @@ jobs:
         run: |
           cd backend
           touch local.env
-          docker-compose up -d 
+          docker-compose up -d
+          curl -v "http://localhost:8080"
 
 #       - name: Cache python deps
 #         uses: actions/cache@v2
