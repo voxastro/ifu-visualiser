@@ -55,7 +55,7 @@ jobs:
         run: |
           cd backend
           touch local.env
-          docker-compose up -d
+          docker-compose up -d ifu_api
           docker ps
           docker exec -t ifu_api curl 127.0.0.1:8080
 
