@@ -67,4 +67,4 @@ jobs:
           python manage.py migrate --noinput
           python manage.py collectstatic --noinput --link -v 2
           gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8000 --timeout 180 --log-level debug --access-logfile - --error-logfile - &
-          curl -v 127.0.0.1:8000/api/
+          curl -v "0.0.0.0:8000/api/"
