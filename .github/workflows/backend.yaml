@@ -45,10 +45,10 @@ jobs:
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\i upload_data.sql"
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\dt+"
 
-        - name: Start Docker daemon with app
-          run: |
-            cd backend
-            docker compose up -d 
+      - name: Start Docker daemon with app
+        run: |
+          cd backend
+          docker compose up -d 
 
 #       - name: Cache python deps
 #         uses: actions/cache@v2
