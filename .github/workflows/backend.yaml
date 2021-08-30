@@ -20,9 +20,10 @@ jobs:
       postgres:
         image: katkov/postgres_q3c
         env:
-          POSTGRES_USER: $DB_USER
-          POSTGRES_DB: $DB_NAME
-          POSTGRES_PASSWORD: $DB_PASSWORD
+          # unfortunately dublicate env variables since general env vars can be used in steps only
+          POSTGRES_USER: ifu_user
+          POSTGRES_DB: ifu_db
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
