@@ -40,8 +40,6 @@ jobs:
 
       - name: Populate database
         run: |
-          apt-get -qq update
-          apt-get -qq install postgresql-client
           cd preparation/db
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "select q3c_version();"
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\i upload_data.sql"
@@ -92,12 +90,9 @@ jobs:
 #           spec: e2e/cypress/integration/spec.js
           
 #### Cypress in Docker container
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        # Ignore the failure of a step and avoid terminating the job.
-        continue-on-error: true
-
 
       - name: Start Docker daemon with app
         run: |
           cd e2e
+          touch local.env
           docker compose up --exit-code-from cypress
