@@ -23,8 +23,8 @@ jobs:
           POSTGRES_USER: $DB_USER
           POSTGRES_DB: $DB_NAME
           POSTGRES_PASSWORD: $DB_PASSWORD
-#         ports:
-#           - "$DB_PORT:$DB_PORT"
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
