@@ -5,21 +5,6 @@ jobs:
   test_backend:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: katkov/postgres_q3c
-        env:
-          POSTGRES_USER: ifu_user
-          POSTGRES_DB: ifu_db
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --name db
     env:
     # semi-fake content of local.env file used for passing secrets into Docker container
       DJANGO_SECRET_KEY: topsecret
@@ -28,28 +13,36 @@ jobs:
       DB_USER: ifu_user
       DB_PASSWORD: postgres
       DB_NAME: ifu_db
-      DB_PORT: 5435
+      DB_PORT: 5432
       SILKY_INTERCEPT_PERCENT: 0
 
+    services:
+      postgres:
+        image: katkov/postgres_q3c
+        env:
+          POSTGRES_USER: $DB_USER
+          POSTGRES_DB: $DB_NAME
+          POSTGRES_PASSWORD: $DB_PASSWORD
+        ports:
+          - $DB_PORT:$DB_PORT
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --name db
     steps:
 
       - name: Checkout repo
         uses: actions/checkout@v2
-
-
-      - name: Install Postgres client (psql) and test DB and q3c extension availability
-        run: |
-          sudo apt-get -qq update;
-          sudo apt-get -y install postgresql-client
-          psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c 'SELECT 1;'
-          psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "select q3c_version();"
   
 
       - name: Populate database
         run: |
           cd preparation/db
-          psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "\i upload_data.sql"
-          psql postgresql://ifu_user:postgres@localhost:5432/ifu_db -c "\dt+"
+          psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "select q3c_version();"
+          psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\i upload_data.sql"
+          psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\dt+"
           
       
       - name: Install dependencies from requirements.txt
@@ -57,6 +50,7 @@ jobs:
           python -c "import sys; print(sys.version)"
           pip install -U pip
           pip install -r backend/requirements.txt
+
 
       - name: Run api application
         run: |
