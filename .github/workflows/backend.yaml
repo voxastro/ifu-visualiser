@@ -45,7 +45,9 @@ jobs:
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\i upload_data.sql"
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\dt+"
 
-      - uses: actions/cache@v2
+      - name: Cache python deps
+        uses: actions/cache@v2
+        id: cache-pip
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -53,7 +55,7 @@ jobs:
             ${{ runner.os }}-pip-
       
       - name: Install dependencies from requirements.txt
-        if: steps.cache-primes.outputs.cache-hit != 'true'
+        if: steps.cache-pip.outputs.cache-hit != 'true'
         run: |
           python -c "import sys; print(sys.version)"
           pip install -U pip
