@@ -57,7 +57,7 @@ jobs:
           touch local.env
           docker-compose up -d ifu_api
           docker ps
-          docker exec -t ifu_api curl 0.0.0.0:8080
+          docker exec -t ifu_api curl localhost:8080
 
 #       - name: Cache python deps
 #         uses: actions/cache@v2
