@@ -45,12 +45,18 @@ jobs:
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\i upload_data.sql"
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\dt+"
 
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+
       - name: Start Docker daemon with app
         run: |
           cd backend
           touch local.env
           docker-compose up -d
-          curl -v "http://localhost:8080"
+          curl -v http://0.0.0.0:8080
 
 #       - name: Cache python deps
 #         uses: actions/cache@v2
