@@ -94,5 +94,5 @@ jobs:
       - name: Start Docker daemon with app
         run: |
           cd e2e
-          touch local.env
+          touch ../backend/local.env
           docker-compose up --exit-code-from cypress
