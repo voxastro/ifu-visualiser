@@ -46,9 +46,9 @@ jobs:
           psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\dt+"
 
 
-#       - uses: satackey/action-docker-layer-caching@v0.0.11
-#         # Ignore the failure of a step and avoid terminating the job.
-#         continue-on-error: true
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
 
 
 #       - name: Start Docker daemon with app
@@ -95,4 +95,12 @@ jobs:
         run: |
           cd e2e
           touch ../backend/local.env
+          echo DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY >> ../backend/local.env
+          echo DJANGO_DEBUG=$DJANGO_DEBUG >> ../backend/local.env
+          echo DB_HOST=postgres >> ../backend/local.env
+          echo DB_USER=$DB_USER >> ../backend/local.env
+          echo DB_PASSWORD=$DB_PASSWORD >> ../backend/local.env
+          echo DB_NAME=$DB_NAME >> ../backend/local.env
+          echo DB_PORT=$DB_PORT >> ../backend/local.env
+          echo SILKY_INTERCEPT_PERCENT=$SILKY_INTERCEPT_PERCENT >> ../backend/local.env
           docker-compose up --exit-code-from cypress
