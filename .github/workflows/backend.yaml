@@ -10,11 +10,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
   
-#       - uses: satackey/action-docker-layer-caching@v0.0.11
-#         # Ignore the failure of a step and avoid terminating the job.
-#         continue-on-error: true
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
 
       - name: Start Docker
         run: |
           cd e2e
-          docker-compose up --exit-code-from cypress
+          docker-compose up --exit-code-from cypress --build
