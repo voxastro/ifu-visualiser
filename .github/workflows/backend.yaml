@@ -4,103 +4,17 @@ on: push
 jobs:
   test_backend:
     runs-on: ubuntu-latest
-#     container: cypress/included:8.3.1
-    env:
-    # semi-fake content of local.env file used for passing secrets into Docker container
-      DJANGO_SECRET_KEY: topsecret
-      DJANGO_DEBUG: True
-      DB_HOST: localhost
-      DB_USER: ifu_user
-      DB_PASSWORD: postgres
-      DB_NAME: ifu_db
-      DB_PORT: 5432
-      SILKY_INTERCEPT_PERCENT: 0
 
-    services:
-      postgres:
-        image: katkov/postgres_q3c
-        env:
-          # unfortunately dublicate env variables since general env vars can be used in steps only
-          POSTGRES_USER: ifu_user
-          POSTGRES_DB: ifu_db
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --name db
     steps:
 
       - name: Checkout repo
         uses: actions/checkout@v2
   
-
-      - name: Populate database
-        run: |
-          cd preparation/db
-          psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "select q3c_version();"
-          psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\i upload_data.sql"
-          psql postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME -c "\dt+"
-
-
       - uses: satackey/action-docker-layer-caching@v0.0.11
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
-
-#       - name: Start Docker daemon with app
-#         run: |
-#           cd backend
-#           touch local.env
-#           docker-compose up -d ifu_api
-#           docker ps
-#           docker exec -t ifu_api curl localhost:8080
-
-#       - name: Cache python deps
-#         uses: actions/cache@v2
-#         id: cache-pip
-#         with:
-#           path: ~/.cache/pip
-#           key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
-#           restore-keys: |
-#             ${{ runner.os }}-pip-
-      
-#       - name: Install dependencies from requirements.txt
-#         if: steps.cache-pip.outputs.cache-hit != 'true'
-#         run: |
-#           python -c "import sys; print(sys.version)"
-#           pip install -U pip
-#           pip install -r backend/requirements.txt
-
-
-#       - name: Run api application
-#         run: |
-#           cd backend
-#           python manage.py makemigrations
-#           python manage.py migrate --noinput
-#           python manage.py collectstatic --noinput --link -v 2
-#           gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8000 --timeout 180 --log-level debug --access-logfile - --error-logfile - &
-      
-#       - name: Test API Cypress
-#         uses: cypress-io/github-action@v2
-#         with:
-#           spec: e2e/cypress/integration/spec.js
-          
-#### Cypress in Docker container
-
-      - name: Start Docker daemon with app
+      - name: Start Docker
         run: |
           cd e2e
-          touch ../backend/local.env
-          echo DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY >> ../backend/local.env
-          echo DJANGO_DEBUG=$DJANGO_DEBUG >> ../backend/local.env
-          echo DB_HOST=postgres >> ../backend/local.env
-          echo DB_USER=$DB_USER >> ../backend/local.env
-          echo DB_PASSWORD=$DB_PASSWORD >> ../backend/local.env
-          echo DB_NAME=$DB_NAME >> ../backend/local.env
-          echo DB_PORT=$DB_PORT >> ../backend/local.env
-          echo SILKY_INTERCEPT_PERCENT=$SILKY_INTERCEPT_PERCENT >> ../backend/local.env
           docker-compose up --exit-code-from cypress
