@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'graphene_django',
     'rest_framework',
     'silk',
-    'djangoql',
     'ifuapp',
 ]
 

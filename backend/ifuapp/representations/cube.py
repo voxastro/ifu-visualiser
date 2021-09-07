@@ -9,8 +9,9 @@ import graphene
 from graphene.types.generic import GenericScalar
 from graphene_django import DjangoObjectType
 from graphene_django_pagination import DjangoPaginationConnectionField
-from djangoql.queryset import apply_search
+# from djangoql.queryset import apply_search
 
+from ..utils import apply_search
 from ifuapp.models import Cube
 from .atlas_param import AtlasParamSerializer
 from .atlas_morphkin import AtlasMorphkinSerializer
@@ -22,11 +23,11 @@ from .atlas_morphkin import AtlasMorphkinSerializer
 
 class CubeSerializer(FlexFieldsModelSerializer):
     spectrum = serializers.SerializerMethodField()
-
+    dist = serializers.SerializerMethodField()
     class Meta:
         model = Cube
         fields = '__all__'
-        omit = ['spectrum']
+        omit = ['spectrum', 'dist']
 
         expandable_fields = {
             'atlas_param': (AtlasParamSerializer, {'many': True}),
@@ -36,6 +37,11 @@ class CubeSerializer(FlexFieldsModelSerializer):
     def get_spectrum(self, obj):
         return obj.get_spectrum()
 
+    def get_dist(self, obj):
+        try:
+            return obj.dist
+        except:
+            return None
 
 class CubeViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -65,9 +71,16 @@ class CubeType(DjangoObjectType):
         fields = ("__all__")
 
     spectrum = GenericScalar(description=Cube.get_spectrum.__doc__)
+    dist = GenericScalar(description="Distance from Cone center")
 
     def resolve_spectrum(self, info, **kwargs):
         return self.get_spectrum()
+
+    def resolve_dist(self, info, **kwargs):
+        try:
+            return self.dist
+        except:
+            return None
 
 
 class Query(graphene.ObjectType):
