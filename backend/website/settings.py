@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [
     'testserver',
     'ifu-dev.voxastro.org',
     'nice-dev.voxastro.org',
+    'ifu.sai.msu.ru',
+    'api.ifu.sai.msu.ru',
 ]
 
 # Application definition
