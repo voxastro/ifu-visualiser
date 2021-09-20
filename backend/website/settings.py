@@ -29,9 +29,8 @@ DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'testserver',
-    'ifu-dev.voxastro.org',
-    'nice-dev.voxastro.org',
-    'ifu.sai.msu.ru',
+    'api-ifu.voxastro.org',
+    'api-ifu.sai.msu.ru',
     'api.ifu.sai.msu.ru',
 ]
 
