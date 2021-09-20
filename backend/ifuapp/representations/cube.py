@@ -53,11 +53,16 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         search_query = self.request.query_params.get('q', False)
+        sortby = self.request.query_params.get('sortby', 'cube_id')
+        descending = self.request.query_params.get('descending', 'false')
+
+        if descending == 'true':
+            sortby = f"-{sortby}"
 
         if search_query:
-            return apply_search(Cube.objects.all(), search_query)
+            return apply_search(Cube.objects.all(), search_query).order_by(sortby)
         else:
-            return Cube.objects.all()
+            return Cube.objects.all().order_by(sortby)
 
 
 ###############################################################################

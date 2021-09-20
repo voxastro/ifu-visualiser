@@ -27,11 +27,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'testserver',
     'api-ifu.voxastro.org',
     'api-ifu.sai.msu.ru',
-    'api.ifu.sai.msu.ru',
 ]
 
 # Application definition
@@ -47,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'silk',
     'ifuapp',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'silk.middleware.SilkyMiddleware',
 ]
 
@@ -144,6 +143,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
     "https://ifu.voxastro.org",
+    "https://ifu.sai.msu.ru",
 ]
 
 GRAPHENE = {
@@ -155,8 +155,11 @@ GRAPHENE = {
 }
 
 
+
 if DEBUG:
-    pass
+    CORS_ORIGIN_WHITELIST += ["localhost", "http://127.0.0.1/", "http://127.0.0.1:8080/", "http://127.0.0.1:8081/"]
+    ALLOWED_HOSTS += ['127.0.0.1', 'testserver']
+
 
     # too slow... likely related to
     # https://github.com/jazzband/django-debug-toolbar/issues/1402
