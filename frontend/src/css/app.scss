@@ -1,0 +1,61 @@
+// app global css in SCSS form
+@font-face {
+  font-family: AmpleSoftPro;
+  src: url(./fonts/AmpleSoftPro-Thin.woff);
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: AmpleSoftPro;
+  src: url(./fonts/AmpleSoftPro-ExtraLight.woff);
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: AmpleSoftPro;
+  src: url(./fonts/AmpleSoftPro-Light.woff);
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: AmpleSoftPro;
+  src: url(./fonts/AmpleSoftPro-Regular.woff);
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: AmpleSoftPro;
+  src: url(./fonts/AmpleSoftPro-Medium.woff);
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: AmpleSoftPro;
+  src: url(./fonts/AmpleSoftPro-Bold.woff);
+  font-weight: 700;
+  font-display: swap;
+}
+
+// declare a class which applies it
+.voxastro-font-logo {
+  font-family: 'AmpleSoftPro';
+  font-weight: 400;
+  font-display: swap;
+}
+
+.voxastro-font-label {
+  font-family: 'AmpleSoftPro';
+  font-weight: 200;
+  font-display: swap;
+}
+
+code {
+  background-color: #ffeeee;
+  padding: 1px 3px;
+  color: #901616;
+}
