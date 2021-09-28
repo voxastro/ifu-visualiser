@@ -2,7 +2,7 @@ from django.db.models.lookups import Lookup
 import numpy as np
 from customquery import Parser
 from django.db.models import F, Func, Value, BooleanField, FloatField
-
+from rest_framework import exceptions
 
 
 def npl(nparr, badmask=None):
@@ -27,13 +27,15 @@ class Distance(Func):
 
 def apply_search(queryset, search_query):
     parser = Parser(queryset.model)
-    filter = parser.parse(search_query)
+    
+    try:
+        filter = parser.parse(search_query)
+    except:
+        raise exceptions.ParseError(detail='Bad query string.')
 
     # check how many Cone statements are in the search query
     n_cones = len(parser.extra_params['cones'])
-    print("====================================================================")
-    print(filter)
-    print("====================================================================")
+
     if n_cones > 0:
         # if there is a Cone statement we have to add annotated field(s)
         # cone_dist (cone_dist1, cone_dist2, etc)
