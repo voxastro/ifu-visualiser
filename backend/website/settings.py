@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'silk',
     'ifuapp',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

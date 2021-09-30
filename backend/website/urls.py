@@ -13,22 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+
 from django.urls import path, include
-from django.conf import settings
-from graphene_django.views import GraphQLView
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import routers
-from ifuapp.representations import CubeViewSet
-
-
-router = routers.DefaultRouter()
-router.register(r'cubes', CubeViewSet, basename="cube")
-
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('silk/', include('silk.urls', namespace='silk')),
-    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
-    path('api/', include(router.urls)),
+    path('', include('ifuapp.urls')),
 ]
