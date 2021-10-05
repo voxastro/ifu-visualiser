@@ -13,6 +13,16 @@ export default function () {
       rowsPerPage: 30,
       rowsNumber: 0,
     },
+    schema: null,
+    tableList: [],
+    tableColumnsObject: [],
+    tableColumnsTicked: [
+      'cube.cube_id',
+      'cube.ra',
+      'cube.dec',
+      'cube.survey',
+      'cube.exptime',
+    ],
     activityStream: [],
   }
 }

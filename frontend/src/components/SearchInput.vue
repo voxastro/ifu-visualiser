@@ -49,6 +49,7 @@ export default defineComponent({
         store.commit('setSesameMessage', '')
         // Now time for requesting data
         store.dispatch('fetchTable')
+        // store.dispatch('makeQuery')
 
         router.push(
           {

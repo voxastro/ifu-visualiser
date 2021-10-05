@@ -26,9 +26,7 @@ class AtlasMorphkinSerializer(FlexFieldsModelSerializer):
 
 
 class AtlasMorphkinViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows AtlasMorphkin to be viewed.
-    """
+    __doc__ = AtlasMorphkin.__doc__
     queryset = AtlasMorphkin.objects.all()
     pagination_class = EnhancedPageNumberPagination
     serializer_class = AtlasMorphkinSerializer

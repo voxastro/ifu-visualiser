@@ -27,7 +27,7 @@ class CubeSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = Cube
         fields = '__all__'
-        omit = ['spectrum', 'dist']
+        # omit = ['spectrum', 'dist']
 
         expandable_fields = {
             'atlas_param': (AtlasParamSerializer, {'many': True}),
@@ -44,9 +44,7 @@ class CubeSerializer(FlexFieldsModelSerializer):
             return None
 
 class CubeViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows Cubes to be viewed.
-    """
+    __doc__ = Cube.__doc__
 
     pagination_class = EnhancedPageNumberPagination
     serializer_class = CubeSerializer
@@ -54,15 +52,18 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         search_query = self.request.query_params.get('q', False)
         sortby = self.request.query_params.get('sortby', 'cube_id')
+        # in case sort by related field
+        sortby = sortby.replace('.', '__')
         descending = self.request.query_params.get('descending', 'false')
 
         if descending == 'true':
             sortby = f"-{sortby}"
 
+        qsall = Cube.objects.all().prefetch_related('atlas_param', 'atlas_morphkin')
         if search_query:
-            return apply_search(Cube.objects.all(), search_query).order_by(sortby)
+            return apply_search(qsall, search_query).order_by(sortby)
         else:
-            return Cube.objects.all().order_by(sortby)
+            return qsall.order_by(sortby)
 
 
 ###############################################################################

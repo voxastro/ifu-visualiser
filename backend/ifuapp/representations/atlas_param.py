@@ -26,9 +26,7 @@ class AtlasParamSerializer(FlexFieldsModelSerializer):
 
 
 class AtlasParamViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows AtlasParam to be viewed.
-    """
+    __doc__ = AtlasParam.__doc__
     queryset = AtlasParam.objects.all()
     pagination_class = EnhancedPageNumberPagination
     serializer_class = AtlasParamSerializer

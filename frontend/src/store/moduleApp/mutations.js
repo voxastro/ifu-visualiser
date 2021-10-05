@@ -41,13 +41,13 @@ export function addRowStream(state, { msg, status }) {
     meta = { type: 'negative' }
   }
 
-  if (status == 'unresolved' || status == 'error') {
-    Notify.create({
-      message: msg,
-      position: 'top-right',
-      ...meta,
-    })
-  }
+  // if (status == 'unresolved' || status == 'error') {
+  //   Notify.create({
+  //     message: msg,
+  //     position: 'top-right',
+  //     ...meta,
+  //   })
+  // }
 
   state.activityStream = [
     { date: Date.now(), msg: msg, status: status },
@@ -57,4 +57,20 @@ export function addRowStream(state, { msg, status }) {
 
 export function resetActivityStream(state) {
   state.activityStream = []
+}
+
+export function setSchema(state, schema) {
+  state.schema = schema
+}
+
+export function setTableList(state, tableList) {
+  state.tableList = tableList
+}
+
+export function setTableColumnsObject(state, columnsObject) {
+  state.tableColumnsObject = columnsObject
+}
+
+export function setTableColumnsTicked(state, ticked) {
+  state.tableColumnsTicked = ticked
 }

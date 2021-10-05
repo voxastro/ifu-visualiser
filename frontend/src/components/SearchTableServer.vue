@@ -1,6 +1,6 @@
 <template>
   <q-table
-    :rows="tableData.results"
+    :rows="tableDataResults"
     row-key="cube_id"
     :rows-per-page-options="[10, 20, 30, 50, 100]"
     v-model:pagination="tablePagination"
@@ -11,8 +11,25 @@
     class="q-mb-xl"
   >
     <template v-slot:top>
-      <div class="row fit justify-between">
-        <q-tree :nodes="streamNodes" node-key="msg" label-key="msg">
+      <div class="row fit justify-start">
+        <q-list>
+          <q-expansion-item
+            expand-separator
+            icon="settings"
+            label="Table settings"
+            dense
+            popup
+          >
+            <TableSettingsColumnSelector />
+          </q-expansion-item>
+        </q-list>
+
+        <q-tree
+          :nodes="streamNodes"
+          node-key="msg"
+          label-key="msg"
+          class="q-ml-lg"
+        >
           <template v-slot:default-header="prop">
             <div class="row items-center">
               <q-icon
@@ -24,19 +41,7 @@
             </div>
           </template>
         </q-tree>
-        <div>
-          <q-btn round icon="settings" />
-        </div>
       </div>
-      <!-- <div :class="sesameStatus == 'error' ? 'text-negative' : ''">
-        {{ sesameMessage }}
-      </div>
-      <div
-        :class="tableStatus == 'error' ? 'text-negative' : ''"
-        class="q-ml-sm"
-      >
-        {{ tableMessage }}
-      </div> -->
     </template>
     <!-- Expanding rows -->
     <template v-slot:header="props">
@@ -49,15 +54,7 @@
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
-        <!-- First columns is expanding button -->
         <q-td auto-width>
-          <!-- <q-btn
-            size="xs"
-            round
-            dense
-            @click="props.expand = !props.expand"
-            :icon="props.expand ? 'remove' : 'add'"
-          /> -->
           <q-btn
             size="xs"
             round
@@ -104,8 +101,10 @@
 <script>
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import TableSettingsColumnSelector from 'components/TableSettingsColumnSelector'
 
 export default defineComponent({
+  components: { TableSettingsColumnSelector },
   setup() {
     const store = useStore()
 
@@ -113,7 +112,7 @@ export default defineComponent({
     const tableMessage = computed(() => store.state.tableMessage)
     const sesameStatus = computed(() => store.state.sesameStatus)
     const sesameMessage = computed(() => store.state.sesameMessage)
-    const tableData = computed(() => store.state.tableData)
+    const tableDataResults = computed(() => store.state.tableData.results)
 
     const tablePagination = computed({
       get() {
@@ -133,6 +132,7 @@ export default defineComponent({
     const submitQuery = () => {
       store.dispatch('fetchTable')
     }
+
     const onRequest = (props) => {
       store.commit('setTablePagination', props.pagination)
       store.dispatch('fetchTable')
@@ -143,9 +143,9 @@ export default defineComponent({
 
     const streamNodes = computed(() => {
       // const stream = store.state.activityStream
-      const child = store.state.activityStream.slice(1).map((item) => {
+      const nodes = store.state.activityStream.map((item) => {
         const d = new Date(item.date)
-        console.log('====================================>>>>>', item.status)
+
         let meta
         if (item.status == 'error') {
           meta = { icon: 'error', color: 'negative' }
@@ -158,19 +158,20 @@ export default defineComponent({
         }
 
         return {
-          // msg: `${d.toLocaleDateString()} ${d.toLocaleTimeString()} - ${
           msg: `${d.toISOString().replace('T', ' ').replace('Z', '')} - ${
             item.msg
           }`,
           ...meta,
         }
       })
+
       const sn =
-        store.state.activityStream.length > 0
+        nodes.length > 0
           ? [
               {
-                msg: store.state.activityStream[0].msg,
-                children: child,
+                ...nodes[0],
+                msg: nodes[0].msg.split(' - ')[1],
+                children: nodes.slice(1),
               },
             ]
           : []
@@ -182,7 +183,7 @@ export default defineComponent({
       tableMessage,
       sesameStatus,
       sesameMessage,
-      tableData,
+      tableDataResults,
       tablePagination,
       stream,
       streamNodes,

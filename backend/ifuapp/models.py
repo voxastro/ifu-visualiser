@@ -5,22 +5,42 @@ from ifuapp.utils import npl
 
 class Cube(models.Model):
     """
-    Spectral cubes model.
+    The main table of spectral cubes.
     """
-    cube_id = models.IntegerField(primary_key=True)
-    ra = models.FloatField(blank=True, null=True)
-    dec = models.FloatField(blank=True, null=True)
-    survey = models.CharField(max_length=32, blank=True, null=True)
-    filename = models.CharField(max_length=64, blank=True, null=True)
-    exptime = models.FloatField(blank=True, null=True)
-    manga_id = models.CharField(max_length=32, blank=True, null=True)
-    manga_plateifu = models.CharField(max_length=32, blank=True, null=True)
-    sami_catid = models.CharField(max_length=32, blank=True, null=True)
-    sami_cube = models.CharField(max_length=32, blank=True, null=True)
-    califa_id = models.IntegerField(blank=True, null=True)
-    califa_name = models.CharField(max_length=32, blank=True, null=True)
-    califa_cube = models.CharField(max_length=32, blank=True, null=True)
-    atlas_name = models.CharField(max_length=32, blank=True, null=True)
+    cube_id = models.IntegerField(
+        primary_key=True, help_text="Primary ID of the spectral cube.")
+    ra = models.FloatField(blank=True, null=True,
+                           help_text="Right Accession coordinate of the center of the "
+                           "cube's field of view. Extracted from the cube WCS, except "
+                           "for the Atlas3D survey, where the coordinates are taken from "
+                           "the fits header.")
+    dec = models.FloatField(blank=True, null=True, help_text="Declination coordinate of the center of the "
+                            "cube's field of view. Extracted from the cube WCS, except "
+                            "for the Atlas3D survey, where the coordinates are taken from "
+                            "the fits header.")
+    survey = models.CharField(max_length=32, blank=True, null=True,
+                              help_text="Survey name")
+    filename = models.CharField(max_length=64, blank=True, null=True,
+                                help_text="File name of the spectral cube.")
+    exptime = models.FloatField(blank=True, null=True,
+                                help_text='Total exposure time extracted from spectral cube.')
+    manga_id = models.CharField(max_length=32, blank=True, null=True,
+                                help_text="MaNGA ID identifier of MaNGA survey target")
+    manga_plateifu = models.CharField(max_length=32, blank=True, null=True,
+                                      help_text="Plate-IFU identifier of MaNGA survey target")
+    sami_catid = models.CharField(max_length=32, blank=True, null=True,
+                                  help_text="'catid' identifier of SAMI survey target")
+    sami_cube = models.CharField(max_length=32, blank=True, null=True,
+                                 help_text="'cube' identifier of SAMI survey target. "
+                                 "Used as part of the cube filename.")
+    califa_id = models.IntegerField(blank=True, null=True,
+                                    help_text="'id' identifier of Califa survey target")
+    califa_name = models.CharField(max_length=32, blank=True, null=True,
+                                   help_text="Galaxy name of Califa survey target")
+    califa_cube = models.CharField(max_length=32, blank=True, null=True,
+                                   help_text="Cube type of Califa survey target")
+    atlas_name = models.CharField(max_length=32, blank=True, null=True,
+                                  help_text="Galaxy name of Atlas3D survey target")
 
     class Meta:
         managed = False
@@ -35,7 +55,6 @@ class Cube(models.Model):
         err = np.random.random(100)
 
         return dict(spec=npl(spec), err=npl(err), meta=dict(objname="SomeGalaxy", header=None))
-
 
 
 class AtlasParam(models.Model):

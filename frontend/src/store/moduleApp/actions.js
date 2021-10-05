@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-export function someAction(/* context */) {}
-
 export function resolveSesameQuery(ctx) {
   console.log('Query Resolving....', ctx.state.queryString)
   ctx.commit('setSesameStatus', 'resolving')
@@ -86,23 +84,43 @@ export function fetchTable(ctx) {
   const queryClean = ctx.state.queryString.replace('+', '%2b')
 
   const p = ctx.state.tablePagination
-  const url = `${process.env.URL_API}/api/cubes/?omit=spectrum&q=${queryClean}&page=${p.page}&page_size=${p.rowsPerPage}&sortby=${p.sortBy}&descending=${p.descending}`
+  const tableColumnsTicked = ctx.state.tableColumnsTicked
+  const tableColumnsTickedStr = tableColumnsTicked
+    .map((e) => e.replace('cube.', ''))
+    .join()
+
+  const url = `${process.env.URL_API}/api/cubes/?omit=spectrum&expand=~all&fields=${tableColumnsTickedStr}&q=${queryClean}&page=${p.page}&page_size=${p.rowsPerPage}&sortby=${p.sortBy}&descending=${p.descending}`
   console.log('Requesting: ', url)
   axios
     .get(url)
     .then(({ data }) => {
       // First, expecting that query is param-search
+      const results = data.results
+
+      const results_upd = results.map((row) => {
+        const entries = tableColumnsTicked.map((column) => {
+          const [table, field] = column.split('.')
+          const key = table == 'cube' ? field : column
+          const value =
+            table == 'cube'
+              ? row[key]
+              : row[table].length > 0
+              ? row[table][0][field]
+              : null
+          return [key, value]
+        })
+        return Object.fromEntries(entries)
+      })
+
+      data.results = results_upd
+
       ctx.commit('setTableData', data)
 
       ctx.commit('setTablePagination', {
         ...ctx.state.tablePagination,
         rowsNumber: data.count,
       })
-      // update columns table depending on type of query
-      //   const cols = ctx.state.queryString.includes('cone')
-      //     ? [...columns, columnDist]
-      //     : columns
-      //   ctx.commit('setTableColumns', cols)
+
       ctx.commit('setTableStatus', 'loaded')
       ctx.commit('setTableMessage', `${data.count} rows loaded`)
       ctx.commit('addRowStream', {
@@ -123,5 +141,46 @@ export function fetchTable(ctx) {
         status: 'error',
       })
       ctx.dispatch('resolveSesameQuery')
+    })
+}
+
+function parseSchema(schema) {
+  const d = schema.definitions
+  const tableObj = d
+    ? Object.keys(d).map((key) => {
+        const prop = d[key].properties
+        return {
+          label: d[key].table_name,
+          key: d[key].table_name,
+          description: d[key].description,
+          children: Object.keys(prop)
+            .filter((p) => p !== 'spectrum')
+            .map((p) => {
+              return {
+                label: p,
+                key: `${d[key].table_name}.${p}`,
+                description: prop[p].description,
+              }
+            }),
+        }
+      })
+    : null
+  console.log({ schema })
+  return tableObj
+}
+
+export function loadSchema(ctx) {
+  const schemaURL = `${process.env.URL_API}/api/swagger.json`
+  axios
+    .get(schemaURL)
+    .then(({ data }) => {
+      ctx.commit('setSchema', data)
+
+      const tableObj = parseSchema(data)
+      console.log('HERrrr=====----->>>>', { tableObj })
+      ctx.commit('setTableColumnsObject', tableObj)
+    })
+    .catch((error) => {
+      console.error(error)
     })
 }
