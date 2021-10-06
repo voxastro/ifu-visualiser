@@ -101,7 +101,13 @@ export function fetchTable(ctx) {
         const entries = tableColumnsTicked.map((column) => {
           const [table, field] = column.split('.')
           const key = table == 'cube' ? field : column
-          const value = table == 'cube' ? row[key] : row[table][field]
+          console.log(table, field, key)
+          const value =
+            table == 'cube'
+              ? row[key]
+              : row[table] != null
+              ? row[table][field]
+              : null
           return [key, value]
         })
         return Object.fromEntries(entries)
