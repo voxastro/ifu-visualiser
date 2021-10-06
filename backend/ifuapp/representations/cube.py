@@ -65,8 +65,9 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
         if descending == 'true':
             sortby = f"-{sortby}"
 
-        qsall = Cube.objects.all()
-        # .prefetch_related('atlas_param', 'atlas_morphkin').select_related('califa_object')
+        qsall = Cube.objects.all().select_related(
+            'atlas_param', 'atlas_morphkin', 'califa_object')
+
         if search_query:
             return apply_search(qsall, search_query).order_by(sortby)
         else:
