@@ -18,19 +18,18 @@ from drf_yasg.generators import OpenAPISchemaGenerator
 # Setup OpenAPI generator and cutomize it
 
 
-
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
-  def get_schema(self, request=None, public=False):
-    """Generate a :class:`.Swagger` object with Model description field"""
+    def get_schema(self, request=None, public=False):
+        """Generate a :class:`.Swagger` object with Model description field"""
 
-    swagger = super().get_schema(request, public)
- 
-    for name, schema in swagger.definitions.items():
-        model = getattr(models, name)
-        schema['description'] = model.__doc__
-        schema['table_name'] = model._meta.db_table
+        swagger = super().get_schema(request, public)
 
-    return swagger
+        for name, schema in swagger.definitions.items():
+            model = getattr(models, name)
+            schema['description'] = model.__doc__
+            schema['table_name'] = model._meta.db_table
+
+        return swagger
 
 
 schema_view = get_schema_view(
@@ -49,7 +48,10 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter()
 router.register(r'cubes', rep.CubeViewSet, basename="cube")
 router.register(r'atlas_param', rep.AtlasParamViewSet, basename="atlas_param")
-router.register(r'atlas_morphkin', rep.AtlasMorphkinViewSet, basename="atlas_morphkin")
+router.register(r'atlas_morphkin', rep.AtlasMorphkinViewSet,
+                basename="atlas_morphkin")
+router.register(r'califa_object', rep.CalifaObjectViewSet,
+                basename="califa_object")
 
 
 urlpatterns = [

@@ -15,6 +15,7 @@ from ..utils import apply_search
 from ifuapp.models import Cube
 from .atlas_param import AtlasParamSerializer
 from .atlas_morphkin import AtlasMorphkinSerializer
+from .califa_object import CalifaObjectSerializer
 
 
 ###############################################################################
@@ -24,14 +25,18 @@ from .atlas_morphkin import AtlasMorphkinSerializer
 class CubeSerializer(FlexFieldsModelSerializer):
     spectrum = serializers.SerializerMethodField()
     dist = serializers.SerializerMethodField()
+
     class Meta:
         model = Cube
-        fields = '__all__'
+        # hide related fields to avoid field duplication
+        fields = [
+            f.name for f in Cube._meta.fields if f.related_model is None] + ['spectrum', 'dist']
         # omit = ['spectrum', 'dist']
 
         expandable_fields = {
-            'atlas_param': (AtlasParamSerializer, {'many': True}),
-            'atlas_morphkin': (AtlasMorphkinSerializer, {'many': True})
+            'atlas_param': (AtlasParamSerializer, {'many': False}),
+            'atlas_morphkin': (AtlasMorphkinSerializer, {'many': False}),
+            'califa_object': (CalifaObjectSerializer, {'many': False}),
         }
 
     def get_spectrum(self, obj):
@@ -42,6 +47,7 @@ class CubeSerializer(FlexFieldsModelSerializer):
             return obj.dist
         except:
             return None
+
 
 class CubeViewSet(viewsets.ReadOnlyModelViewSet):
     __doc__ = Cube.__doc__
@@ -59,7 +65,8 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
         if descending == 'true':
             sortby = f"-{sortby}"
 
-        qsall = Cube.objects.all().prefetch_related('atlas_param', 'atlas_morphkin')
+        qsall = Cube.objects.all()
+        # .prefetch_related('atlas_param', 'atlas_morphkin').select_related('califa_object')
         if search_query:
             return apply_search(qsall, search_query).order_by(sortby)
         else:
