@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 print("Searching MaNGA files...")
 files_manga = glob(
-    "/data/manga_dr16/spectro/redux/v2_4_3/*/stack/manga-*-LOGCUBE.fits*")
+    "/data/manga_dr16/spectro/redux/v2_4_3/*/stack/manga-*-LOGCUBE.fit*")
 print("Searching SAMI files...")
 files_sami = glob("/data/sami_dr3/*/*_cube_blue.fits*")
 print("Searching CALIFA files...")
@@ -31,17 +31,16 @@ t = Table(names=('id', 'ra', 'dec', 'survey',
                  'califa_cube', 'atlas_name'),
           dtype=(np.int32, np.float32, np.float32, 'U100',
                  'U100', np.float32, 'U100', 'U100',
-                 'U100', 'U100', np.int32, 'U100',
+                 'U100', 'U100', 'U100', 'U100',
                  'U100', 'U100'))
 
 
-for q, f in enumerate(tqdm(files_califa)):
-# for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas)):
+for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas)):
 
     hdr = fits.getheader(f)
     file_noext = os.path.basename(f).split('.fits')[0]
 
-    if 'sdss16' in f:
+    if 'manga' in f:
         t.add_row((q+1, hdr['IFURA'], hdr['IFUDEC'], 'manga',
                    file_noext, hdr['EXPTIME'], hdr['MANGAID'], hdr['PLATEIFU'],
                    '', '', '', '',
@@ -61,7 +60,7 @@ for q, f in enumerate(tqdm(files_califa)):
         center = w.pixel_to_world(hdr['NAXIS1']/2.0, hdr['NAXIS2']/2.0)
         t.add_row((q+1, center.ra.deg, center.dec.deg, 'califa',
                    file_noext, 900*3, '', '',
-                   '', '', hdr['CALIFAID'], file_noext.split('.')[0],
+                   '', '', f"{hdr['CALIFAID']}", file_noext.split('.')[0],
                    file_noext.split('.')[1], ''))
     elif 'atlas' in f:
         t.add_row((q+1, hdr['TCRVL6'], hdr['TCRVL7'], 'atlas3d',
