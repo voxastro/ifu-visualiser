@@ -6,7 +6,15 @@
         class="voxastro-font-logo text-h5 text-white"
         style="cursor: pointer; text-decoration: none"
       >
-        IFU Visualiser
+        <div class="row items-center">
+          <img
+            alt="IFU visualiser logo"
+            src="~assets/logo_IFU.svg"
+            style="width: 30px; height: 30px"
+            class="q-mr-sm"
+          />
+          IFU Visualiser
+        </div>
       </router-link>
       <!-- </q-toolbar-title> -->
 
