@@ -52,6 +52,8 @@ router.register(r'atlas_morphkin', rep.AtlasMorphkinViewSet,
                 basename="atlas_morphkin")
 router.register(r'califa_object', rep.CalifaObjectViewSet,
                 basename="califa_object")
+router.register(r'sami_cube_obs', rep.SamiCubeObsViewSet,
+                basename="sami_cube_obs")
 
 
 urlpatterns = [

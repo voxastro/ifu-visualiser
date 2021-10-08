@@ -157,6 +157,49 @@ ANALYZE califa_object;
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
+-- Add SAMI tables
+
+DROP TABLE IF EXISTS sami_cube_obs CASCADE;
+
+CREATE TABLE sami_cube_obs  (
+    ind             integer,
+    cubeidpub       varchar(14)  PRIMARY KEY,
+    cubeid          varchar(80),
+    cubename        varchar(80),
+    catid           bigint,
+    cubefwhm        real,
+    cubetexp        real,
+    meantrans       real,
+    isbest          boolean,
+    catsource       integer,
+    warnstar        integer,
+    warnfill        integer,
+    warnz           integer,
+    warnmult        integer,
+    warnakpc        integer,
+    warnare         integer,
+    warnamge        integer,
+    warnsk2m        integer,
+    warnsk4m        integer,
+    warnsk4mhsn     integer,
+    warnfcal        integer,
+    warnfcbr        integer,
+    warnskyb        integer,
+    warnskyr        integer,
+    warnsker        integer,
+    warnwcs         integer,
+    warnre          integer,
+    warnskem        integer,
+    warnemft        integer
+);
+
+
+\copy sami_cube_obs FROM '../sami/sami_dr3.CubeObs.csv' DELIMITER ',' CSV HEADER;
+ALTER TABLE sami_cube_obs DROP COLUMN ind;
+
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Before (re)populate the table it has to be dropped
 DROP TABLE IF EXISTS cube CASCADE;
 
@@ -170,7 +213,7 @@ CREATE TABLE cube (
     manga_id        varchar(32),
     manga_plateifu  varchar(32),
     sami_catid      varchar(32),
-    sami_cube       varchar(32),
+    sami_cubeidpub  varchar(32),
     califa_id       integer,
     califa_name     varchar(32),
     califa_cube     varchar(32),
@@ -190,6 +233,9 @@ UPDATE cube AS c SET atlas_morphkin=t.atlas_name FROM atlas_param AS t WHERE c.a
 
 ALTER TABLE cube ADD COLUMN califa_object integer REFERENCES califa_object(califa_id);
 UPDATE cube AS c SET califa_object=t.califa_id FROM califa_object AS t WHERE c.califa_id = t.califa_id;
+
+ALTER TABLE cube ADD COLUMN sami_cube_obs varchar(14) REFERENCES sami_cube_obs(cubeidpub);
+UPDATE cube AS c SET sami_cube_obs=t.cubeidpub FROM sami_cube_obs AS t WHERE c.sami_cubeidpub = t.cubeidpub;
 
 ALTER TABLE cube OWNER TO ifu_user;
 

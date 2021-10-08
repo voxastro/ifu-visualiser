@@ -16,6 +16,7 @@ from ifuapp.models import Cube
 from .atlas_param import AtlasParamSerializer
 from .atlas_morphkin import AtlasMorphkinSerializer
 from .califa_object import CalifaObjectSerializer
+from .sami_cube_obs import SamiCubeObsSerializer
 
 
 ###############################################################################
@@ -37,6 +38,7 @@ class CubeSerializer(FlexFieldsModelSerializer):
             'atlas_param': (AtlasParamSerializer, {'many': False}),
             'atlas_morphkin': (AtlasMorphkinSerializer, {'many': False}),
             'califa_object': (CalifaObjectSerializer, {'many': False}),
+            'sami_cube_obs': (SamiCubeObsSerializer, {'many': False}),
         }
 
     def get_spectrum(self, obj):
