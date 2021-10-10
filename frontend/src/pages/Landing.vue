@@ -14,7 +14,7 @@
           </div>
           <div class="text-h4 text-weight-light text-center">
             A tool for visualization and exploration of spectroscopy IFU data
-            from the MaNGA, SAMI, Califa, and Atlas3D galaxy surveys.
+            from the MaNGA, SAMI, Califa, and Atlas3D galaxy surveys
           </div>
         </div>
       </div>

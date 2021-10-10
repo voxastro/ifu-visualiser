@@ -7,7 +7,10 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "build": "URL_API=https://api-ifu.voxastro.org quasar build",
+    "dev": "URL_API=http://127.0.0.1:8080 quasar dev",
+    "deploy": "vercel"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

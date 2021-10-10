@@ -24,10 +24,9 @@ class Distance(Func):
     output_field = FloatField()
 
 
-
 def apply_search(queryset, search_query):
     parser = Parser(queryset.model)
-    
+
     try:
         filter = parser.parse(search_query)
     except:
@@ -48,7 +47,8 @@ def apply_search(queryset, search_query):
             dec = Value(c['cone_dec'])
             radius = Value(c['cone_radius'])
 
-            kws_query[f"cone_query{idx_str}"] = RadialQuery(F('ra'), F('dec'), ra, dec, radius)
+            kws_query[f"cone_query{idx_str}"] = RadialQuery(
+                F('ra'), F('dec'), ra, dec, radius)
             kws_dist[f"dist{idx_str}"] = Distance(F('ra'), F('dec'), ra, dec)
 
         return queryset.annotate(**kws_query).filter(filter).annotate(**kws_dist)
