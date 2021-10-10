@@ -196,6 +196,48 @@ CREATE TABLE sami_cube_obs  (
 
 \copy sami_cube_obs FROM '../sami/sami_dr3.CubeObs.csv' DELIMITER ',' CSV HEADER;
 ALTER TABLE sami_cube_obs DROP COLUMN ind;
+ANALYZE sami_inputcat_gama;
+
+-------------------------------------------------------------------------------
+DROP TABLE IF EXISTS sami_inputcat_gama CASCADE;
+
+CREATE TABLE sami_inputcat_gama (
+    ind             integer,
+    catid           bigint PRIMARY KEY,
+    ra_obj          real,
+    dec_obj         real,
+    ra_ifu          real,
+    dec_ifu         real,
+    r_petro         real,
+    r_auto          real,
+    z_tonry         real,
+    z_spec          real,
+    m_r             real,
+    r_e             real,
+    mu_within_1re   real,
+    mu_1re          real,
+    mu_2re          real,
+    ellip           real,
+    pa              real,
+    mstar           real,
+    g_i             real,
+    a_g             real,
+    surv_sami       integer,
+    bad_class       integer
+);
+
+\copy sami_inputcat_gama FROM '../sami/sami_dr3.InputCatGAMADR3.csv' DELIMITER ',' CSV HEADER;
+ALTER TABLE sami_inputcat_gama DROP COLUMN ind;
+UPDATE sami_inputcat_gama SET m_r=NULL WHERE m_r='NaN';
+UPDATE sami_inputcat_gama SET r_e=NULL WHERE r_e='NaN';
+UPDATE sami_inputcat_gama SET mu_within_1re=NULL WHERE mu_within_1re='NaN';
+UPDATE sami_inputcat_gama SET mu_1re=NULL WHERE mu_1re='NaN';
+UPDATE sami_inputcat_gama SET mu_2re=NULL WHERE mu_2re='NaN';
+UPDATE sami_inputcat_gama SET ellip=NULL WHERE ellip='NaN';
+UPDATE sami_inputcat_gama SET pa=NULL WHERE pa='NaN';
+
+ANALYZE sami_inputcat_gama;
+
 
 
 -------------------------------------------------------------------------------
@@ -212,7 +254,7 @@ CREATE TABLE cube (
     exptime         real,
     manga_id        varchar(32),
     manga_plateifu  varchar(32),
-    sami_catid      varchar(32),
+    sami_catid      bigint,
     sami_cubeidpub  varchar(32),
     califa_id       integer,
     califa_name     varchar(32),
@@ -236,6 +278,9 @@ UPDATE cube AS c SET califa_object=t.califa_id FROM califa_object AS t WHERE c.c
 
 ALTER TABLE cube ADD COLUMN sami_cube_obs varchar(14) REFERENCES sami_cube_obs(cubeidpub);
 UPDATE cube AS c SET sami_cube_obs=t.cubeidpub FROM sami_cube_obs AS t WHERE c.sami_cubeidpub = t.cubeidpub;
+
+ALTER TABLE cube ADD COLUMN sami_inputcat_gama bigint REFERENCES sami_inputcat_gama(catid);
+UPDATE cube AS c SET sami_inputcat_gama=t.catid FROM sami_inputcat_gama AS t WHERE c.sami_catid = t.catid;
 
 ALTER TABLE cube OWNER TO ifu_user;
 

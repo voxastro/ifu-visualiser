@@ -21,6 +21,7 @@ from ifuapp.views import (
     AtlasMorphkinSerializer,
     CalifaObjectSerializer,
     SamiCubeObsSerializer,
+    SamiInputcatGamaSerializer,
 )
 
 
@@ -44,6 +45,7 @@ class CubeSerializer(FlexFieldsModelSerializer):
             'atlas_morphkin': (AtlasMorphkinSerializer, {'many': False}),
             'califa_object': (CalifaObjectSerializer, {'many': False}),
             'sami_cube_obs': (SamiCubeObsSerializer, {'many': False}),
+            'sami_inputcat_gama': (SamiInputcatGamaSerializer, {'many': False}),
         }
 
     def get_spectrum(self, obj):
@@ -72,8 +74,14 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
         if descending == 'true':
             sortby = f"-{sortby}"
 
-        qsall = Cube.objects.all().select_related(
-            'atlas_param', 'atlas_morphkin', 'califa_object')
+        relations = (
+            'atlas_param',
+            'atlas_morphkin',
+            'califa_object',
+            'sami_cube_obs',
+            'sami_inputcat_gama',
+        )
+        qsall = Cube.objects.all().select_related(*relations)
 
         if search_query:
             return apply_search(qsall, search_query).order_by(sortby)

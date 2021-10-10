@@ -40,8 +40,8 @@ class Cube(models.Model):
                                 help_text="MaNGA ID identifier of MaNGA survey target")
     manga_plateifu = models.CharField(max_length=32, blank=True, null=True,
                                       help_text="Plate-IFU identifier of MaNGA survey target")
-    sami_catid = models.CharField(max_length=32, blank=True, null=True,
-                                  help_text="'catid' identifier of SAMI survey target")
+    sami_catid = models.BigIntegerField(blank=True, null=True,
+                                        help_text="'catid' identifier of SAMI survey target")
     sami_cubeidpub = models.CharField(max_length=32, blank=True, null=True,
                                       help_text="'cube' identifier of SAMI survey target. "
                                       "Used as part of the cube filename.")
@@ -66,6 +66,9 @@ class Cube(models.Model):
     sami_cube_obs = models.ForeignKey('SamiCubeObs', models.DO_NOTHING,
                                       db_column='sami_cube_obs', blank=True, null=True,
                                       related_name='cubes', related_query_name='cubes')
+    sami_inputcat_gama = models.ForeignKey('SamiInputcatGama', models.DO_NOTHING,
+                                           db_column='sami_inputcat_gama', blank=True, null=True,
+                                           related_name='cubes', related_query_name='cubes')
 
     class Meta:
         managed = False
