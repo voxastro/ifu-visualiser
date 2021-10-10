@@ -22,6 +22,7 @@ from ifuapp.views import (
     CalifaObjectSerializer,
     SamiCubeObsSerializer,
     SamiInputcatGamaSerializer,
+    MangaDrpSerializer,
 )
 
 
@@ -46,6 +47,7 @@ class CubeSerializer(FlexFieldsModelSerializer):
             'califa_object': (CalifaObjectSerializer, {'many': False}),
             'sami_cube_obs': (SamiCubeObsSerializer, {'many': False}),
             'sami_inputcat_gama': (SamiInputcatGamaSerializer, {'many': False}),
+            'manga_drp': (MangaDrpSerializer, {'many': False}),
         }
 
     def get_spectrum(self, obj):
@@ -80,6 +82,7 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
             'califa_object',
             'sami_cube_obs',
             'sami_inputcat_gama',
+            'manga_drp',
         )
         qsall = Cube.objects.all().select_related(*relations)
 

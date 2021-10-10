@@ -57,6 +57,8 @@ router.register(r'sami_cube_obs', views.SamiCubeObsViewSet,
                 basename="sami_cube_obs")
 router.register(r'sami_inputcat_gama', views.SamiInputcatGamaViewSet,
                 basename="sami_inputcat_gama")
+router.register(r'manga_drp', views.MangaDrpViewSet,
+                basename="manga_drp")
 
 
 urlpatterns = [

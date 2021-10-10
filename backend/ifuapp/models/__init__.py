@@ -3,4 +3,5 @@ from .atlas_morphkin import *
 from .califa_object import *
 from .sami_cube_obs import *
 from .sami_inputcat_gama import *
+from .manga_drp import *
 from .cube import *

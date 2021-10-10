@@ -69,6 +69,9 @@ class Cube(models.Model):
     sami_inputcat_gama = models.ForeignKey('SamiInputcatGama', models.DO_NOTHING,
                                            db_column='sami_inputcat_gama', blank=True, null=True,
                                            related_name='cubes', related_query_name='cubes')
+    manga_drp = models.ForeignKey('MangaDrp', models.DO_NOTHING,
+                                  db_column='manga_drp', blank=True, null=True,
+                                  related_name='cubes', related_query_name='cubes')
 
     class Meta:
         managed = False
