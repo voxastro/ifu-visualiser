@@ -101,7 +101,7 @@ export function fetchTable(ctx) {
         const entries = tableColumnsTicked.map((column) => {
           const [table, field] = column.split('.')
           const key = table == 'cube' ? field : column
-          console.log(table, field, key)
+
           const value =
             table == 'cube'
               ? row[key]
@@ -166,7 +166,6 @@ function parseSchema(schema) {
         }
       })
     : null
-  console.log({ schema })
   return tableObj
 }
 
@@ -180,6 +179,20 @@ export function loadSchema(ctx) {
       const tableObj = parseSchema(data)
       console.log('HERrrr=====----->>>>', { tableObj })
       ctx.commit('setTableColumnsObject', tableObj)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+}
+
+export function fetchObject(ctx, cube_id) {
+  const url = `${process.env.URL_API}/api/cubes/${cube_id}/?omit=spectrum&expand=~all`
+  console.log(`Requesting object: ${cube_id}: ${url}`)
+  axios
+    .get(url)
+    .then(({ data }) => {
+      console.log('DEBUG object query results: ', data)
+      ctx.commit('addObjectCubeSet', data)
     })
     .catch((error) => {
       console.error(error)

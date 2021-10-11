@@ -50,8 +50,8 @@
           label="Search"
         ></q-route-tab>
         <q-route-tab
-          to="/visualiser"
-          name="visualiser"
+          to="/visualise"
+          name="visualise"
           label="Visualiser"
         ></q-route-tab>
         <q-route-tab to="/docs" name="docs" label="Docs"></q-route-tab>

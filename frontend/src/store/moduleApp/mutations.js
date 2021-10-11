@@ -74,3 +74,7 @@ export function setTableColumnsObject(state, columnsObject) {
 export function setTableColumnsTicked(state, ticked) {
   state.tableColumnsTicked = ticked
 }
+
+export function addObjectCubeSet(state, object) {
+  state.cubeset = [...state.cubeset, object]
+}

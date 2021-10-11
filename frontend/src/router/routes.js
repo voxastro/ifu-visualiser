@@ -16,10 +16,16 @@ const routes = [
     },
   },
   {
-    path: '/visualiser',
+    path: '/visualise',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('src/pages/Visualiser.vue') },
+      { path: '', component: () => import('src/pages/Visualise.vue') },
+      {
+        name: 'cube',
+        path: 'cube/:cube_id',
+        component: () => import('src/pages/VisualiseCube.vue'),
+        props: true,
+      },
     ],
   },
   {

@@ -3,6 +3,7 @@ export default function () {
     queryString: '',
     sesameStatus: null,
     sesameMessage: '',
+    activityStream: [],
     tableStatus: null,
     tableMessage: '',
     tableData: [],
@@ -23,6 +24,6 @@ export default function () {
       'cube.survey',
       'cube.exptime',
     ],
-    activityStream: [],
+    cubeset: [],
   }
 }

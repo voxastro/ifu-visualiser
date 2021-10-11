@@ -43,58 +43,22 @@
         </q-tree>
       </div>
     </template>
+    <template v-slot:body-cell-cube_id="props">
+      <q-td :props="props">
+        <router-link :to="{ name: 'cube', params: { cube_id: props.value } }">{{
+          props.value
+        }}</router-link>
+      </q-td>
+    </template>
     <!-- Expanding rows -->
-    <template v-slot:header="props">
+    <!-- <template v-slot:header="props">
       <q-tr :props="props">
         <q-th auto-width />
         <q-th v-for="col in props.cols" :key="col.name" :props="props">
           {{ col.label }}
         </q-th>
       </q-tr>
-    </template>
-    <template v-slot:body="props">
-      <q-tr :props="props">
-        <q-td auto-width>
-          <q-btn
-            size="xs"
-            round
-            @click="props.expand = !props.expand"
-            :icon="props.expand ? 'remove' : 'add'"
-          />
-        </q-td>
-        <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          <!-- Iterate over all columns and replace object and spectrum id by links -->
-          <router-link
-            v-if="col.name == 'r2id_spec'"
-            :to="{
-              name: 'pageSpecObj',
-              params: { r2id_spec: props.row.r2id_spec },
-            }"
-          >
-            {{ props.row.r2id_spec }}
-          </router-link>
-          <router-link
-            v-else-if="col.name == 'obj'"
-            :to="{
-              name: 'pageObj',
-              params: { r2id_obj: props.row.obj },
-            }"
-          >
-            {{ props.row.obj }}
-          </router-link>
-          <div v-else>
-            {{ col.value }}
-          </div>
-        </q-td>
-      </q-tr>
-      <!-- Plot in the expanded panel -->
-      <q-tr v-if="props.expand" :props="props">
-        <q-td colspan="100%">
-          Bla-bla
-          <!-- <SpecPlot :id_spec="props.row.r2id_spec" /> -->
-        </q-td>
-      </q-tr>
-    </template>
+    </template> -->
   </q-table>
 </template>
 
