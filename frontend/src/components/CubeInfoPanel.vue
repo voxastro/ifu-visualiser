@@ -44,6 +44,9 @@
                     >{{ replaceNull(cube[col.label]) }}
                   </q-item-label>
                 </q-item-section>
+                <q-tooltip :delay="500" class="bg-grey-3 text-black">{{
+                  col.description
+                }}</q-tooltip>
               </div>
             </q-list>
           </q-tab-panel>
@@ -59,6 +62,9 @@
                   <q-item-label caption>{{ col.label }}</q-item-label>
                   <q-item-label>{{ cube[t][col.label] }}</q-item-label>
                 </q-item-section>
+                <q-tooltip :delay="500" class="bg-grey-3 text-black">{{
+                  col.description
+                }}</q-tooltip>
               </div>
             </q-list>
           </q-tab-panel>
