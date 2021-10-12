@@ -439,6 +439,7 @@ CREATE TABLE cube (
 \copy cube FROM 'table_cubes.csv' DELIMITER ',' CSV HEADER;
 
 UPDATE cube SET atlas_name=REPLACE(atlas_name,' ','');
+UPDATE cube SET exptime=NULL WHERE exptime='NaN';
 
 -- add reference columns
 ALTER TABLE cube ADD COLUMN atlas_param varchar(32) REFERENCES atlas_param(atlas_name);
