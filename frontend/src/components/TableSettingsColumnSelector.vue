@@ -57,12 +57,7 @@ export default defineComponent({
     const store = useStore()
 
     const schema = computed(() => store.state.schema)
-    if (schema.value == null) {
-      store.dispatch('loadSchema')
-    }
-
     const tableColumns = computed(() => store.state.tableColumnsObject)
-
     const tableColumnsTicked = computed({
       get() {
         return store.state.tableColumnsTicked

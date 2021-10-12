@@ -27,6 +27,7 @@ const Store = new Vuex.Store({
 })
 
 export default store(function (/* { ssrContext } */) {
+  Store.dispatch('loadSchema')
   return Store
 })
 
