@@ -196,7 +196,7 @@ CREATE TABLE sami_cube_obs  (
 
 \copy sami_cube_obs FROM '../sami/sami_dr3.CubeObs.csv' DELIMITER ',' CSV HEADER;
 ALTER TABLE sami_cube_obs DROP COLUMN ind;
-ANALYZE sami_inputcat_gama;
+ANALYZE sami_cube_obs;
 
 -------------------------------------------------------------------------------
 DROP TABLE IF EXISTS sami_inputcat_gama CASCADE;
