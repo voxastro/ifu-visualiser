@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-h4 text-weight-light">Cube ID {{ cube_id }}</div>
-    <div>
+    <div class="q-mt-sm">
       <q-card>
         <q-tabs
           v-model="tab"
@@ -19,28 +19,47 @@
             :label="t"
             :key="t"
           />
-          <!-- <q-tab name="mails" label="Mails" />
-          <q-tab name="alarms" label="Alarms" />
-          <q-tab name="movies" label="Movies" /> -->
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
+          <!-- Main table with minor customizaitons -->
+          <q-tab-panel name="cube">
+            {{ tableColumnsObject['cube'].description }}
+
+            <q-list dense style="max-height: 285px">
+              <div
+                v-for="col in tableColumnsObject['cube'].children"
+                :key="col.key"
+                class="inline-block q-px-sm"
+              >
+                <q-item-section v-if="col.label == 'ra'">
+                  <q-item-label caption>coordinates</q-item-label>
+                  <q-item-label>{{ cube.ra }} {{ cube.dec }} </q-item-label>
+                </q-item-section>
+                <q-item-section v-else-if="col.label !== 'dec'">
+                  <q-item-label caption>{{ col.label }}</q-item-label>
+                  <q-item-label
+                    >{{ replaceNull(cube[col.label]) }}
+                  </q-item-label>
+                </q-item-section>
+              </div>
+            </q-list>
+          </q-tab-panel>
           <q-tab-panel v-for="t in tableNamesCubeFirst" :name="t" :key="t">
-            <div class="text-h6">{{ t }}</div>
             {{ tableColumnsObject[t].description }}
-            <q-list bordered class="q-mb-md full-height">
-              <q-item
-                v-for="(value, name) in tableColumnsObject[t].children"
-                :key="name"
-                class="inline-block"
+            <q-list dense style="max-height: 285px">
+              <div
+                v-for="col in tableColumnsObject[t].children"
+                :key="col.label"
+                class="inline-block q-px-sm"
               >
                 <q-item-section>
-                  <q-item-label caption>{{ name }}</q-item-label>
-                  <q-item-label>{{ value }}</q-item-label>
+                  <q-item-label caption>{{ col.label }}</q-item-label>
+                  <q-item-label>{{ cube[t][col.label] }}</q-item-label>
                 </q-item-section>
-              </q-item>
+              </div>
             </q-list>
           </q-tab-panel>
         </q-tab-panels>
@@ -77,20 +96,24 @@ export default defineComponent({
     )
     const tableNamesCubeFirst = [
       'cube',
-      ...tableNames.filter((e) => e != 'cube'),
+      ...tableNames.filter((e) => e != 'cube' && cube.value[e]),
     ]
 
-    console.log(
-      '---------------------------------=',
-      tableColumnsObject,
-      tableColumnsList.value
-    )
-    // const tableNames = Object.keys(columnsObject?.value)
+    const replaceNull = (value) => {
+      return value ? value : 'n/a'
+    }
 
     const tab = ref('cube')
     const cubeFlat = cube.value ? objectFlatten(cube.value) : null
 
-    return { cube, cubeFlat, tab, tableNamesCubeFirst, tableColumnsObject }
+    return {
+      cube,
+      cubeFlat,
+      tab,
+      tableNamesCubeFirst,
+      tableColumnsObject,
+      replaceNull,
+    }
   },
 })
 </script>
