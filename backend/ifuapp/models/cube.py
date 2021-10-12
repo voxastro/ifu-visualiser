@@ -1,5 +1,6 @@
 import numpy as np
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 from rest_framework import serializers, viewsets
 from rest_flex_fields import FlexFieldsModelSerializer
@@ -53,6 +54,9 @@ class Cube(models.Model):
                                    help_text="Cube type of Califa survey target")
     atlas_name = models.CharField(max_length=32, blank=True, null=True,
                                   help_text="Galaxy name of Atlas3D survey target")
+    # This field type is a guess
+    fov_fits = ArrayField(ArrayField(models.FloatField(blank=True, null=True)),
+                          help_text="Coordinates of the rectangular area covered by cube fits file")
 
     atlas_param = models.ForeignKey(
         'AtlasParam', models.DO_NOTHING, db_column='atlas_param', blank=True, null=True,

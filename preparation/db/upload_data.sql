@@ -433,7 +433,8 @@ CREATE TABLE cube (
     califa_id       integer,
     califa_name     varchar(32),
     califa_cube     varchar(32),
-    atlas_name      varchar(32)
+    atlas_name      varchar(32),
+    fov_fits        real[][]
 );
 
 \copy cube FROM 'table_cubes.csv' DELIMITER ',' CSV HEADER;
