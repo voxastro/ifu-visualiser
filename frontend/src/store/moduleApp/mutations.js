@@ -82,3 +82,11 @@ export function addObjectCubeSet(state, object) {
 export function setPointer(state, pointer) {
   state.pointer = pointer
 }
+
+export function setSelectedSpectrum(state, data) {
+  state.selectedSpectrum = data
+}
+
+export function setCurrentCube(state, cube_id) {
+  state.currentCube = cube_id
+}

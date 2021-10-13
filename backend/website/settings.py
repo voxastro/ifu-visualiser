@@ -167,7 +167,6 @@ if DEBUG:
     ]
     ALLOWED_HOSTS += ['127.0.0.1', 'localhost', 'testserver']
 
-
     # too slow... likely related to
     # https://github.com/jazzband/django-debug-toolbar/issues/1402
 
@@ -220,3 +219,6 @@ SILKY_DYNAMIC_PROFILING = [
         'function': 'list'
     },
 ]
+
+
+IFU_PATH = os.getenv('IFU_PATH')

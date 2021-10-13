@@ -73,7 +73,7 @@ module.exports = configure(function (ctx) {
       },
 
       // for Vercel expectations
-      distDir: ctx.mode.spa ? 'public' : null,
+      // distDir: ctx.mode.spa ? 'public' : null,
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer

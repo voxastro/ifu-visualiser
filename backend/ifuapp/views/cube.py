@@ -51,7 +51,13 @@ class CubeSerializer(FlexFieldsModelSerializer):
         }
 
     def get_spectrum(self, obj):
-        return obj.get_spectrum()
+        request = self.context.get('request')
+        ra = request.query_params.get('ra', None)
+        dec = request.query_params.get('dec', None)
+        arcsec_x = request.query_params.get('arcsec_x', None)
+        arcsec_y = request.query_params.get('arcsec_y', None)
+
+        return obj.get_spectrum(ra=ra, dec=dec, arcsec_x=arcsec_x, arcsec_y=arcsec_y)
 
     def get_dist(self, obj):
         try:

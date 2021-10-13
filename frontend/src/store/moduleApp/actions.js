@@ -196,3 +196,34 @@ export function fetchObject(ctx, cube_id) {
       console.error(error)
     })
 }
+
+export function fetchSpectrum(ctx) {
+  const cube_id = ctx.state.currentCube
+  const ra = ctx.state.pointer.ra
+  const dec = ctx.state.pointer.dec
+
+  ctx.commit('setSelectedSpectrum', {
+    status: 'loading',
+    message: '',
+    data: null,
+  })
+  const url = `${process.env.URL_API}/api/cubes/${cube_id}/?fields=spectrum&ra=${ra}&dec=${dec}`
+  console.log(`Requesting spec: ${cube_id}: ${url}`)
+  axios
+    .get(url)
+    .then(({ data }) => {
+      ctx.commit('setSelectedSpectrum', {
+        status: 'loaded',
+        message: 'Spectrum loaded',
+        data: data,
+      })
+    })
+    .catch((error) => {
+      console.error(error)
+      ctx.commit('setSelectedSpectrum', {
+        status: 'error',
+        message: 'error',
+        data: null,
+      })
+    })
+}

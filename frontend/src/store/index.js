@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 // import Vue from 'vue'
 
 import moduleApp from './moduleApp'
+import state from './moduleApp/state'
 
 // Vue.use(Vuex)
 

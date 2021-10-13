@@ -26,5 +26,7 @@ export default function () {
     ],
     cubeset: [],
     pointer: null,
+    currentCube: null,
+    selectedSpectrum: { status: null, message: null, data: null },
   }
 }

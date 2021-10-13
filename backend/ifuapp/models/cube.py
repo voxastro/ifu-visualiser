@@ -1,6 +1,8 @@
 import numpy as np
+import os
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.conf import settings
 
 from rest_framework import serializers, viewsets
 from rest_flex_fields import FlexFieldsModelSerializer
@@ -12,6 +14,10 @@ from graphene_django_pagination import DjangoPaginationConnectionField
 
 from ifuapp.utils import npl
 from ifuapp.pagination import EnhancedPageNumberPagination
+
+from astropy.io import fits
+from astropy.wcs import WCS, utils as wutils
+from astropy.coordinates import SkyCoord
 
 from ..utils import apply_search
 
@@ -84,9 +90,53 @@ class Cube(models.Model):
     def __str__(self):
         return f"{self.survey} - {self.cube_id}"
 
-    def get_spectrum(self):
+    def get_spectrum(self, ra=None, dec=None, arcsec_x=0.0, arcsec_y=0.0):
         """Test model method"""
-        spec = np.random.random(100)
-        err = np.random.random(100)
 
-        return dict(spec=npl(spec), err=npl(err), meta=dict(objname="SomeGalaxy", header=None))
+        print("==============================================================")
+        print(settings.IFU_PATH)
+
+        if self.survey == 'manga':
+            plate, idudsgn = self.manga_plateifu.split("-")
+            file_cube = f"{settings.IFU_PATH}/manga_dr16/spectro/redux/v2_4_3/{plate}/stack/manga-{self.manga_plateifu}-LOGCUBE.fits"
+
+            if not os.path.isfile(file_cube):
+                file_cube += ".gz"
+
+            fits.info(file_cube)
+            with fits.open(file_cube) as hdul:
+                hdr = hdul['FLUX'].header
+                flux = hdul['FLUX'].data
+                ivar = hdul['IVAR'].data
+                wave = hdul['WAVE'].data
+
+            sz = flux.shape
+            w = WCS(hdr).dropaxis(-1)
+            scale = np.mean(wutils.proj_plane_pixel_scales(w)*3600.0)
+
+            if (ra != None) & (dec != None):
+                coo = SkyCoord(float(ra), float(dec), unit=('deg', 'deg'))
+                x, y = w.world_to_pixel(coo)
+                arcsec_x = (x - sz[1]/2) * scale
+                arcsec_y = (y - sz[2]/2) * scale
+                pixel_x = np.round(x).astype(int)
+                pixel_y = np.round(y).astype(int)
+            elif (arcsec_x != None) & (arcsec_y != None):
+                pixel_x = np.round(float(arcsec_x)/scale + sz[1]/2).astype(int)
+                pixel_y = np.round(float(arcsec_y)/scale + sz[2]/2).astype(int)
+                coo = w.pixel_to_world(float(arcsec_x), float(arcsec_y))
+                ra = coo.ra.deg
+                dec = coo.dec.deg
+
+            else:
+                return None
+
+            if (0 <= pixel_x < sz[1]) & (0 <= pixel_y < sz[2]):
+                flx = npl(flux[:, pixel_x, pixel_y])
+                error = npl(1.0/np.sqrt(ivar[:, pixel_x, pixel_y]))
+                wav = npl(wave)
+                return dict(ra=ra, dec=dec, arcsec_x=arcsec_x,
+                            arcsec_y=arcsec_y, pixel_x=pixel_x,
+                            pixel_y=pixel_y, flux=flx, error=error, wave=wav)
+            else:
+                return None

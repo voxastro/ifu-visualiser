@@ -54,7 +54,14 @@
 // Based on this
 // https://github.com/cds-astro/aladin-lite-vue-component/blob/master/src/components/Viewer.vue
 
-import { defineComponent, watch, ref, computed, onMounted } from 'vue'
+import {
+  defineComponent,
+  watch,
+  ref,
+  computed,
+  onMounted,
+  watchEffect,
+} from 'vue'
 
 export default defineComponent({
   name: 'Aladin',
@@ -141,7 +148,6 @@ export default defineComponent({
 
           // Plot region if provided
           if (props.fov_array) {
-            console.log(aladinObj.value)
             let overlay = A.graphicOverlay({
               color: '#ee2345',
               lineWidth: 0.5,
@@ -167,26 +173,26 @@ export default defineComponent({
       )
     })
 
-    watch(survey, (survey) => {
-      aladinObj.value.setImageSurvey(survey)
+    watchEffect(() => {
+      if (aladinObj.value) {
+        aladinObj.value.setImageSurvey(survey.value)
+      }
     })
 
-    watch(
-      () => props.pointer,
-      (pointer) => {
-        console.log('------ Pointer:', pointer)
+    watchEffect(() => {
+      if (aladinCatalog.value) {
         // first check is there source in the list. If so, remove
         if (aladinSourceList.value.length > 0) {
           aladinCatalog.value.remove(aladinSourceList.value[0])
         }
         // add source into list
-        aladinSourceList.value = [
-          aladinASourceFunc.value(pointer.ra, pointer.dec),
-        ]
+        aladinSourceList.value = props.pointer
+          ? [aladinASourceFunc.value(props.pointer.ra, props.pointer.dec)]
+          : []
         // upload source list to the catalog to be shown
         aladinCatalog.value.addSources(aladinSourceList.value)
       }
-    )
+    })
 
     return { aladinDiv, survey }
   },

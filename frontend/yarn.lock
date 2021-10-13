@@ -5291,6 +5291,16 @@ plist@^3.0.1:
     base64-js "^1.5.1"
     xmlbuilder "^9.0.7"
 
+plotly.js-basic-dist@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist/-/plotly.js-basic-dist-2.5.1.tgz#3652cce69c69241887f04b94d96fd5f672aa8601"
+  integrity sha512-UeJEKrJl5m0DllgvKLV8qFk83BOOJZv9SA37a/7lvfyNeXIdj+gpVe56+0Bm0oLpqZI/Uqf9vNABuXXnNgMVMQ==
+
+plotly.js-cartesian-dist-min@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/plotly.js-cartesian-dist-min/-/plotly.js-cartesian-dist-min-2.5.1.tgz#f5c1316836dfe4b16afd35d4fbef64f92bbe7f03"
+  integrity sha512-vlR6/qTdrISz7lx/kZ+DXGZ59bAyjzY1Q3973GA1A43gQ3g6OR28veIZGdjN6hwuAxPs1xHIUY23AYlG3NR3bA==
+
 portfinder@^1.0.28:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.28.tgz#67c4622852bd5374dd1dd900f779f53462fac778"

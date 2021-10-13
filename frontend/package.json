@@ -17,6 +17,8 @@
     "@vue/devtools": "^5.3.4",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "plotly.js-basic-dist": "^2.5.1",
+    "plotly.js-cartesian-dist-min": "^2.5.1",
     "process": "^0.11.10",
     "quasar": "^2.0.0",
     "vuex": "^4.0.1"
