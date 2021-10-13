@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { omitColumnsColumnSettings } from 'src/utils.js'
 
 export function resolveSesameQuery(ctx) {
   console.log('Query Resolving....', ctx.state.queryString)
@@ -113,9 +114,7 @@ export function fetchTable(ctx) {
         return Object.fromEntries(entries)
       })
 
-      data.results = results_upd
-
-      ctx.commit('setTableData', data)
+      ctx.commit('setTableData', { ...data, results: results_upd })
 
       ctx.commit('setTablePagination', {
         ...ctx.state.tablePagination,
@@ -155,7 +154,7 @@ function parseSchema(schema) {
           key: d[key].table_name,
           description: d[key].description,
           children: Object.keys(prop)
-            .filter((p) => p !== 'spectrum')
+            .filter((p) => !omitColumnsColumnSettings.includes(p))
             .map((p) => {
               return {
                 label: p,
@@ -191,7 +190,6 @@ export function fetchObject(ctx, cube_id) {
   axios
     .get(url)
     .then(({ data }) => {
-      console.log('DEBUG object query results: ', data)
       ctx.commit('addObjectCubeSet', data)
     })
     .catch((error) => {

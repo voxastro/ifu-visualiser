@@ -78,3 +78,7 @@ export function setTableColumnsTicked(state, ticked) {
 export function addObjectCubeSet(state, object) {
   state.cubeset = [...state.cubeset, object]
 }
+
+export function setPointer(state, pointer) {
+  state.pointer = pointer
+}

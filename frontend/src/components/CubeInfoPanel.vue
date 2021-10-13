@@ -78,7 +78,7 @@
 import { defineComponent, computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
-import { objectFlatten } from 'src/utils.js'
+import { objectFlatten, omitColumnsColumnSettings } from 'src/utils.js'
 
 export default defineComponent({
   name: 'CubeInfoPanel',
@@ -94,12 +94,10 @@ export default defineComponent({
     const tableColumnsList = computed(() => store.state.tableColumnsObject)
     const tableNames = tableColumnsList.value.map((e) => e.label)
     const tableColumnsObject = tableColumnsList.value.reduce(
-      (a, v) => ({
-        ...a,
-        [v.label]: v,
-      }),
+      (a, v) => ({ ...a, [v.label]: v }),
       {}
     )
+
     const tableNamesCubeFirst = [
       'cube',
       ...tableNames.filter((e) => e != 'cube' && cube.value[e]),

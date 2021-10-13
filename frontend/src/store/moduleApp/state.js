@@ -25,5 +25,6 @@ export default function () {
       'cube.exptime',
     ],
     cubeset: [],
+    pointer: null,
   }
 }

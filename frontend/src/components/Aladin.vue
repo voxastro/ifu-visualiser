@@ -62,11 +62,17 @@ export default defineComponent({
     ra: { default: 10.0 },
     dec: { default: 15.0 },
     fov: { default: 1 / 60.0 },
+    fov_array: Array,
+    pointer: Object,
   },
-  setup(props) {
+  emits: ['aladinOnClick'],
+  setup(props, context) {
     const aladinDiv = ref(null)
     const survey = ref('P/SDSS9/color')
     const aladinObj = ref(null)
+    const aladinCatalog = ref(null)
+    const aladinASourceFunc = ref(null)
+    const aladinSourceList = ref([])
 
     const loadScriptIntoDOM = (bodyElement, url, onloadCallback) => {
       const scriptElement = document.createElement('script')
@@ -78,10 +84,10 @@ export default defineComponent({
       bodyElement.appendChild(scriptElement)
     }
 
-    const setImageSurvey = (bla) => {
-      console.log('DEBUUUUG++++++++++++++++++++++++++++++', bla)
-      this.aladin.setImageSurvey(this.survey)
-    }
+    // const setImageSurvey = (bla) => {
+    //   console.log('DEBUUUUG++++++++++++++++++++++++++++++', bla)
+    //   this.aladin.setImageSurvey(this.survey)
+    // }
 
     onMounted(() => {
       // Now the component is mounted we can load aladin lite.
@@ -133,9 +139,30 @@ export default defineComponent({
             { imgFormat: 'png' }
           )
 
+          // Plot region if provided
+          if (props.fov_array) {
+            console.log(aladinObj.value)
+            let overlay = A.graphicOverlay({
+              color: '#ee2345',
+              lineWidth: 0.5,
+            })
+            aladinObj.value.addOverlay(overlay)
+            overlay.add(A.polyline(props.fov_array))
+          }
+
           //   aladin.on('objectClicked', (object) =>
           //     aladin.$emit('aladinObjectClicked', object)
           //   )
+
+          // on click event
+          aladinObj.value.on('click', (object) => {
+            context.emit('aladinOnClick', object)
+          })
+
+          // Catalog of sources. Used to show pointer
+          aladinCatalog.value = A.catalog({ shape: 'plus', color: 'lightblue' })
+          aladinObj.value.addCatalog(aladinCatalog.value)
+          aladinASourceFunc.value = A.source
         }
       )
     })
@@ -144,11 +171,24 @@ export default defineComponent({
       aladinObj.value.setImageSurvey(survey)
     })
 
-    return { aladinDiv, survey, setImageSurvey }
-  },
+    watch(
+      () => props.pointer,
+      (pointer) => {
+        console.log('------ Pointer:', pointer)
+        // first check is there source in the list. If so, remove
+        if (aladinSourceList.value.length > 0) {
+          aladinCatalog.value.remove(aladinSourceList.value[0])
+        }
+        // add source into list
+        aladinSourceList.value = [
+          aladinASourceFunc.value(pointer.ra, pointer.dec),
+        ]
+        // upload source list to the catalog to be shown
+        aladinCatalog.value.addSources(aladinSourceList.value)
+      }
+    )
 
-  mounted() {
-    // Then we load the aladin lite script.
+    return { aladinDiv, survey }
   },
 })
 </script>

@@ -50,15 +50,6 @@
         }}</router-link>
       </q-td>
     </template>
-    <!-- Expanding rows -->
-    <!-- <template v-slot:header="props">
-      <q-tr :props="props">
-        <q-th auto-width />
-        <q-th v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.label }}
-        </q-th>
-      </q-tr>
-    </template> -->
   </q-table>
 </template>
 

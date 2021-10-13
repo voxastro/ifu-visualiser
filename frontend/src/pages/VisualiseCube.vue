@@ -4,10 +4,17 @@
       <div class="col-10 q-mt-md">
         <div v-if="cube" class="row">
           <div class="col-auto q-mr-lg">
-            <Aladin :ra="cube.ra" :dec="cube.dec" />
+            <Aladin
+              :ra="cube.ra"
+              :dec="cube.dec"
+              :fov_array="fov_array"
+              :pointer="pointer"
+              @aladinOnClick="setPointerCoordinates"
+            />
           </div>
           <div class="col">
             <CubeInfoPanel :cube_id="cube_id" />
+            <p>Pointer: {{ pointer }}</p>
           </div>
         </div>
       </div>
@@ -28,12 +35,24 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
     const cube = computed(() => store.getters.getObjectById(props.cube_id))
+    const fov_array = computed(() => {
+      const cub = store.getters.getObjectById(props.cube_id)
+      return cub.fov_fits ? [...cub.fov_fits, cub.fov_fits[0]] : null
+    })
+
+    const pointer = computed(() => store.state.pointer)
 
     if (cube.value == null) {
       store.dispatch('fetchObject', props.cube_id)
     }
 
-    return { cube }
+    const setPointerCoordinates = (obj) => {
+      if (!obj.isDragging) {
+        store.commit('setPointer', { ra: obj.ra, dec: obj.dec })
+      }
+    }
+
+    return { cube, fov_array, pointer, setPointerCoordinates }
   },
 })
 </script>
