@@ -3,11 +3,11 @@ it('Trivial test /api', () => {
 })
 
 it('Trivial test /api/cubes', () => {
-  cy.visit('/api/cubes')
+  cy.visit('/api/cubes&omit=spectrum')
 })
 
 it('Check json format for /api/cubes', () => {
-  cy.request('/api/cubes?format=json')
+  cy.request('/api/cubes?format=json&omit=spectrum')
     .its('headers')
     .its('content-type')
     .should('include', 'application/json')
@@ -36,6 +36,13 @@ it('Check json format for /api/califa_object', () => {
 
 it('Check json format for /api/sami_cube_obs', () => {
   cy.request('/api/sami_cube_obs?format=json')
+    .its('headers')
+    .its('content-type')
+    .should('include', 'application/json')
+})
+
+it('Check json format for /api/manga_drp', () => {
+  cy.request('/api/manga_drp?format=json')
     .its('headers')
     .its('content-type')
     .should('include', 'application/json')
