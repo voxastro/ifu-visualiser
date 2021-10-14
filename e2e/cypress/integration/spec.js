@@ -2,11 +2,11 @@ it('Trivial test /api', () => {
   cy.visit('/api')
 })
 
-it('Trivial test /api/cubes', () => {
-  cy.visit('/api/cubes&omit=spectrum')
+it('Trivial test /api/cubes/', () => {
+  cy.visit('/api/cubes?omit=spectrum')
 })
 
-it('Check json format for /api/cubes', () => {
+it('Check json format for /api/cubes/', () => {
   cy.request('/api/cubes?format=json&omit=spectrum')
     .its('headers')
     .its('content-type')
