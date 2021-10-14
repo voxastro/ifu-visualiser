@@ -434,10 +434,11 @@ CREATE TABLE cube (
     califa_name     varchar(32),
     califa_cube     varchar(32),
     atlas_name      varchar(32),
-    fov_fits        real[][]
+    fov_fits        real[][],
+    fov_ifu         real[][]
 );
 
-\copy cube FROM 'table_cubes.csv' DELIMITER ',' CSV HEADER;
+\copy cube FROM 'table_cubes_test.csv' DELIMITER ',' CSV HEADER;
 
 UPDATE cube SET atlas_name=REPLACE(atlas_name,' ','');
 UPDATE cube SET exptime=NULL WHERE exptime='NaN';
