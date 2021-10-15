@@ -69,7 +69,7 @@ export default defineComponent({
     ra: { default: 10.0 },
     dec: { default: 15.0 },
     fov: { default: 1 / 60.0 },
-    fov_array: Array,
+    fov_arrays: Array,
     pointer: Object,
   },
   emits: ['aladinOnClick'],
@@ -147,13 +147,15 @@ export default defineComponent({
           )
 
           // Plot region if provided
-          if (props.fov_array) {
+          if (props.fov_arrays) {
             let overlay = A.graphicOverlay({
               color: '#ee2345',
               lineWidth: 0.5,
             })
             aladinObj.value.addOverlay(overlay)
-            overlay.add(A.polyline(props.fov_array))
+            props.fov_arrays.forEach((fov_array) => {
+              overlay.add(A.polyline(fov_array))
+            })
           }
 
           //   aladin.on('objectClicked', (object) =>

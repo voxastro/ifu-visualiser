@@ -4,4 +4,4 @@ export function objectFlatten(obj) {
   return Object.fromEntries([])
 }
 
-export const omitColumnsColumnSettings = ['spectrum', 'fov_fits']
+export const omitColumnsColumnSettings = ['spectrum', 'fov_fits', 'fov_ifu']

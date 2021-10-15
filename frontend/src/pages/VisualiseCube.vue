@@ -12,7 +12,7 @@
                 <Aladin
                   :ra="cube.ra"
                   :dec="cube.dec"
-                  :fov_array="fov_array"
+                  :fov_arrays="fov_arrays"
                   :pointer="pointer"
                   @aladinOnClick="setPointerCoordinates"
                 />
@@ -42,9 +42,10 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
     const cube = computed(() => store.getters.getObjectById(props.cube_id))
-    const fov_array = computed(() => {
+    const fov_arrays = computed(() => {
       const cub = store.getters.getObjectById(props.cube_id)
-      return cub.fov_fits ? [...cub.fov_fits, cub.fov_fits[0]] : null
+      const ffov = [...cub.fov_fits, cub.fov_fits[0]]
+      return cub.fov_ifu ? [ffov, cub.fov_ifu] : [ffov]
     })
 
     const pointer = computed(() => store.state.pointer)
@@ -77,7 +78,7 @@ export default defineComponent({
 
     store.commit('setCurrentCube', props.cube_id)
 
-    return { cube, fov_array, pointer, setPointerCoordinates }
+    return { cube, fov_arrays, pointer, setPointerCoordinates }
   },
 })
 </script>

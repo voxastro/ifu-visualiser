@@ -63,6 +63,8 @@ class Cube(models.Model):
     # This field type is a guess
     fov_fits = ArrayField(ArrayField(models.FloatField(blank=True, null=True)),
                           help_text="Coordinates of the rectangular area covered by cube fits file")
+    fov_ifu = ArrayField(ArrayField(models.FloatField(blank=True, null=True)),
+                         help_text="Coordinates of the IFU field-of-view")
 
     atlas_param = models.ForeignKey(
         'AtlasParam', models.DO_NOTHING, db_column='atlas_param', blank=True, null=True,
