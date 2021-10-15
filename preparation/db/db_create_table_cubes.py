@@ -81,11 +81,11 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
         plateifu = hdr['PLATEIFU']
         plate, ifudsg = plateifu.split('-')
         fov = fovs[f"manga{ifudsg[:-2]}"]
-        manga_fov_coords = SkyCoord(hdr['IFURA']+np.array(fov['x'])/3600.0,
+        manga_fov_coords = SkyCoord(hdr['IFURA']+np.array(fov['x'])/3600.0/np.cos(np.deg2rad(hdr['IFUDEC']),
                                     hdr['IFUDEC']+np.array(fov['y'])/3600.0,
                                     unit=(u.deg, u.deg))
 
-        manga_fov_str = "{" + \
+        manga_fov_str="{" +
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in manga_fov_coords]) + "}"
 
@@ -94,37 +94,37 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
                    '', '', '', '',
                    '', '', fov_fits, manga_fov_str))
     elif 'sami' in f:
-        w = WCS(hdr).dropaxis(-1)
+        w=WCS(hdr).dropaxis(-1)
 
-        coords = wutils.pixel_to_skycoord(
+        coords=wutils.pixel_to_skycoord(
             [0, 0, hdr['NAXIS1'], hdr['NAXIS1']],
             [0, hdr['NAXIS2'], hdr['NAXIS2'], 0], w)
 
-        fov_fits = "{" + \
+        fov_fits="{" +
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in coords]) + "}"
 
-        center = w.pixel_to_world(hdr['NAXIS1']/2.0, hdr['NAXIS2']/2.0)
-        cube = file_noext.split(hdr['NAME']+'_')[1]
-        catid, seqnum = file_noext.split('_')[:2]
-        cubeidpub = f"{catid}_{seqnum}"
+        center=w.pixel_to_world(hdr['NAXIS1']/2.0, hdr['NAXIS2']/2.0)
+        cube=file_noext.split(hdr['NAME']+'_')[1]
+        catid, seqnum=file_noext.split('_')[:2]
+        cubeidpub=f"{catid}_{seqnum}"
         t.add_row((q+1, center.ra.deg, center.dec.deg, 'sami',
                    file_noext, hdr['TOTALEXP'], '', '',
                    catid, cubeidpub, '', '',
                    '', '', fov_fits, ''))
 
     elif 'califa' in f:
-        w = WCS(hdr).dropaxis(-1)
+        w=WCS(hdr).dropaxis(-1)
 
-        coords = wutils.pixel_to_skycoord(
+        coords=wutils.pixel_to_skycoord(
             [0, 0, hdr['NAXIS1'], hdr['NAXIS1']],
             [0, hdr['NAXIS2'], hdr['NAXIS2'], 0], w)
 
-        fov_fits = "{" + \
+        fov_fits="{" +
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in coords]) + "}"
 
-        center = w.pixel_to_world(hdr['NAXIS1']/2.0, hdr['NAXIS2']/2.0)
+        center=w.pixel_to_world(hdr['NAXIS1']/2.0, hdr['NAXIS2']/2.0)
         t.add_row((q+1, center.ra.deg, center.dec.deg, 'califa',
                    file_noext, 900*3, '', '',
                    '', '', f"{hdr['CALIFAID']}", file_noext.split('.')[0],
