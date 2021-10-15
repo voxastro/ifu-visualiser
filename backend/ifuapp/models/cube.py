@@ -22,6 +22,40 @@ from astropy.coordinates import SkyCoord
 from ..utils import apply_search
 
 
+def file_check(file):
+    if not os.path.isfile(file):
+        file += ".gz"
+    return file
+
+
+def wave_hdr(hdr, index='3'):
+    waves = hdr['CRVAL'+index] + hdr['CDELT'+index] * \
+        (np.arange(hdr['NAXIS'+index]) - hdr['CRPIX'+index] - 1)
+    return waves
+
+
+def get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y):
+    scale = np.mean(wutils.proj_plane_pixel_scales(w)*3600.0)
+
+    if (ra != None) & (dec != None):
+        coo = SkyCoord(float(ra), float(dec), unit=('deg', 'deg'))
+        x, y = w.world_to_pixel(coo)
+        arcsec_x = (x - sz[0]/2) * scale
+        arcsec_y = (y - sz[1]/2) * scale
+        pixel_x = np.round(x).astype(int)
+        pixel_y = np.round(y).astype(int)
+    elif (arcsec_x != None) & (arcsec_y != None):
+        pixel_x = np.round(float(arcsec_x)/scale + sz[0]/2).astype(int)
+        pixel_y = np.round(float(arcsec_y)/scale + sz[1]/2).astype(int)
+        coo = w.pixel_to_world(float(arcsec_x), float(arcsec_y))
+        ra = coo.ra.deg
+        dec = coo.dec.deg
+    else:
+        raise ValueError
+
+    return float(ra), float(dec), arcsec_x, arcsec_y, pixel_x, pixel_y
+
+
 class Cube(models.Model):
     """
     The main table of spectral cubes.
@@ -95,50 +129,185 @@ class Cube(models.Model):
     def get_spectrum(self, ra=None, dec=None, arcsec_x=0.0, arcsec_y=0.0):
         """Test model method"""
 
-        print("==============================================================")
-        print(settings.IFU_PATH)
+        output = dict()
+        output['ra'] = ra
+        output['dec'] = dec
+        output['arcsec_x'] = arcsec_x
+        output['arcsec_y'] = arcsec_y
+        output['pixel_x'] = None
+        output['pixel_y'] = None
 
         if self.survey == 'manga':
             plate, idudsgn = self.manga_plateifu.split("-")
             file_cube = f"{settings.IFU_PATH}/manga_dr16/spectro/redux/v2_4_3/{plate}/stack/manga-{self.manga_plateifu}-LOGCUBE.fits"
+            file_cube = file_check(file_cube)
 
-            if not os.path.isfile(file_cube):
-                file_cube += ".gz"
-
-            fits.info(file_cube)
             with fits.open(file_cube) as hdul:
                 hdr = hdul['FLUX'].header
                 flux = hdul['FLUX'].data
                 ivar = hdul['IVAR'].data
                 wave = hdul['WAVE'].data
 
-            sz = flux.shape
             w = WCS(hdr).dropaxis(-1)
-            scale = np.mean(wutils.proj_plane_pixel_scales(w)*3600.0)
+            sz = w.pixel_shape
 
-            if (ra != None) & (dec != None):
-                coo = SkyCoord(float(ra), float(dec), unit=('deg', 'deg'))
-                x, y = w.world_to_pixel(coo)
-                arcsec_x = (x - sz[1]/2) * scale
-                arcsec_y = (y - sz[2]/2) * scale
-                pixel_x = np.round(x).astype(int)
-                pixel_y = np.round(y).astype(int)
-            elif (arcsec_x != None) & (arcsec_y != None):
-                pixel_x = np.round(float(arcsec_x)/scale + sz[1]/2).astype(int)
-                pixel_y = np.round(float(arcsec_y)/scale + sz[2]/2).astype(int)
-                coo = w.pixel_to_world(float(arcsec_x), float(arcsec_y))
-                ra = coo.ra.deg
-                dec = coo.dec.deg
+            ra, dec, arcsec_x, arcsec_y, pixel_x, pixel_y = \
+                get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
-            else:
-                return None
-
-            if (0 <= pixel_x < sz[1]) & (0 <= pixel_y < sz[2]):
+            if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
                 flx = npl(flux[:, pixel_x, pixel_y])
                 error = npl(1.0/np.sqrt(ivar[:, pixel_x, pixel_y]))
                 wav = npl(wave)
-                return dict(ra=ra, dec=dec, arcsec_x=arcsec_x,
-                            arcsec_y=arcsec_y, pixel_x=pixel_x,
-                            pixel_y=pixel_y, flux=flx, error=error, wave=wav)
+                yrange = [0, np.nanpercentile(flux[:, pixel_x, pixel_y], 99)]
+
+                output['spec'] = [
+                    dict(flux=flx, error=error, wave=wav, yrange=yrange)]
+                output['status'] = "ok"
+                output['message'] = ""
             else:
-                return None
+                output['spec'] = []
+                output['status'] = "error"
+                output['message'] = "The point is out of the cube field-of-view."
+
+        elif self.survey == 'sami':
+            spec = []
+            for suf in ['red', 'blue']:
+                file_cube = f"{settings.IFU_PATH}/sami_dr3/{self.sami_catid}/{self.sami_cubeidpub}_cube_{suf}.fits"
+                file_cube = file_check(file_cube)
+                with fits.open(file_cube) as hdul:
+                    hdr = hdul['PRIMARY'].header
+                    flux = hdul['PRIMARY'].data
+                    var = hdul['VARIANCE'].data
+                wave = wave_hdr(hdr)
+
+                # calculate pointer coordinates based on the first red cube.
+                # Assuming both cubes are identical.
+                if suf == 'red':
+                    w = WCS(hdr).dropaxis(-1)
+                    sz = w.pixel_shape
+
+                    ra, dec, arcsec_x, arcsec_y, pixel_x, pixel_y = \
+                        get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
+
+                if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
+                    flx = npl(flux[:, pixel_x, pixel_y])
+                    error = npl(np.sqrt(var[:, pixel_x, pixel_y]))
+                    wav = npl(wave)
+                    yrange = [0, np.nanpercentile(
+                        flux[:, pixel_x, pixel_y], 99)]
+                    spec.append(dict(flux=flx, error=error,
+                                wave=wav, yrange=yrange))
+                    output['status'] = "ok"
+                    output['message'] = ""
+                else:
+                    spec.append(null)
+                    output['status'] = "error"
+                    output['message'] = "The point is out of the cube field-of-view."
+
+            output['spec'] = spec
+
+        elif self.survey == 'califa':
+            file_cube = f"{settings.IFU_PATH}/califa_dr3/{self.califa_cube}/reduced_v2.2/{self.califa_name}.{self.califa_cube}.rscube.fits"
+            file_cube = file_check(file_cube)
+
+            fits.info(file_cube)
+            with fits.open(file_cube) as hdul:
+                hdr = hdul['PRIMARY'].header
+                flux = hdul['PRIMARY'].data
+                err = hdul['ERROR'].data
+
+            wave = wave_hdr(hdr)
+
+            w = WCS(hdr).dropaxis(-1)
+
+            ra, dec, arcsec_x, arcsec_y, pixel_x, pixel_y = \
+                get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
+
+            if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
+                flx = npl(flux[:, pixel_x, pixel_y])
+                error = npl(err[:, pixel_x, pixel_y])
+                wav = npl(wave)
+                yrange = [0, np.nanpercentile(flux[:, pixel_x, pixel_y], 99.9)]
+                output['spec'] = [
+                    dict(flux=flx, error=error, wave=wav, yrange=yrange)]
+                output['status'] = "ok"
+                output['message'] = ""
+            else:
+                output['spec'] = []
+                output['status'] = "error"
+                output['message'] = "The point is out of the cube field-of-view."
+
+        elif self.survey == 'atlas3d':
+            file_cube = f"{settings.IFU_PATH}/atlas3d/{self.filename}.fits"
+            file_cube = file_check(file_cube)
+            scale = 0.8
+            with fits.open(file_cube) as hdul:
+                hdr = hdul[0].header
+                flux = hdul[0].data
+                err = np.sqrt(hdul[1].data)
+                t = hdul[2].data
+            wave = wave_hdr(hdr, index='1')
+
+            pix_x = np.round(t['A'] / scale).astype(int)
+            pix_y = np.round(t['D'] / scale).astype(int)
+            nx = np.round(np.max(pix_x) - np.min(pix_x)+1).astype(int)
+            ny = np.round(np.max(pix_y) - np.min(pix_y)+1).astype(int)
+            sz = [ny, nx]
+            imsk = np.full(sz, np.nan)
+            # indexes = np.ravel_multi_index((pix_y, pix_x), [nx, ny])
+            # img[indexes] = np.arange(len(pix_x))
+
+            imsk[-np.min(pix_y) + pix_y,
+                 -np.min(pix_x) + pix_x] = np.arange(len(pix_x))
+
+            ind_center = np.argwhere((pix_x == 0) & (pix_y == 0))[0][0]
+            w = WCS(naxis=2)
+            # w.wcs.crpix = [-np.min(pix_x) + pix_x[ind_center],
+            #                -np.min(pix_y) + pix_y[ind_center]]
+            w.wcs.crpix = [-np.min(pix_y) + pix_y[ind_center],
+                           -np.min(pix_x) + pix_x[ind_center]]
+
+            w.wcs.crval = [hdr['TCRVL6'], hdr['TCRVL7']]
+            w.wcs.ctype = ['RA---TAN', 'DEC--TAN']
+            w.wcs.cdelt = [-scale/3600.0, scale/3600.0]
+
+            # fits.PrimaryHDU(data=img, header=w.to_header()).writeto(
+            #     'tmp.fits', overwrite=True)
+            ra, dec, arcsec_x, arcsec_y, pixel_x, pixel_y = \
+                get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
+
+            if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
+                ind = imsk[pixel_x, pixel_y].astype(int)
+                if np.isfinite(ind):
+                    flx = npl(flux[ind, :])
+                    error = npl(err[ind, :])
+                    wav = npl(wave)
+                    yrange = [0, np.nanpercentile(flux[ind, :], 99.9)]
+                    output['spec'] = [
+                        dict(flux=flx, error=error, wave=wav, yrange=yrange)]
+                    output['status'] = "ok"
+                    output['message'] = ""
+                else:
+                    output['spec'] = []
+                    output['status'] = "error"
+                    output['message'] = "The point is badpixel"
+            else:
+                output['spec'] = []
+                output['status'] = "error"
+                output['message'] = "The point is out of the cube field-of-view"
+
+        else:
+            output['spec'] = []
+            output['status'] = "error"
+            output['message'] = f"Survey `{self.survey}` is not added to the IFU-Visualiser"
+            pixel_x = None
+            pixel_y = None
+
+        output['ra'] = ra
+        output['dec'] = dec
+        output['arcsec_x'] = arcsec_x
+        output['arcsec_y'] = arcsec_y
+        output['pixel_x'] = pixel_x
+        output['pixel_y'] = pixel_y
+
+        return output

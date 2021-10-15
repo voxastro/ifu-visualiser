@@ -44,8 +44,9 @@ export default defineComponent({
     const cube = computed(() => store.getters.getObjectById(props.cube_id))
     const fov_arrays = computed(() => {
       const cub = store.getters.getObjectById(props.cube_id)
-      const ffov = [...cub.fov_fits, cub.fov_fits[0]]
-      return cub.fov_ifu ? [ffov, cub.fov_ifu] : [ffov]
+      const fov_fits = cub.fov_fits ? [...cub.fov_fits, cub.fov_fits[0]] : null
+      const fov_ifu = cub.fov_ifu ? cub.fov_ifu : null
+      return [fov_fits, fov_ifu].filter((e) => e)
     })
 
     const pointer = computed(() => store.state.pointer)

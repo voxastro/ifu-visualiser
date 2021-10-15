@@ -21,47 +21,49 @@ export default defineComponent({
       // const d = data.spectrum.data
       console.log('Start ploting spectrum.....', d)
 
-      let yrange
+      const yrange = d.spec[0]?.yrange
+      d.spec.forEach((sp) => {
+        traces.value = [
+          ...traces.value,
+          {
+            x: sp.wave,
+            y: sp.flux.map((v, i) => v - sp.error[i]),
+            fill: 'none',
+            line: { width: 0.3, color: 'grey' },
+            hoverinfo: 'skip',
+            showlegend: false,
+          },
+          {
+            name: 'Error bar',
+            x: sp.wave,
+            y: sp.flux.map((v, i) => v + sp.error[i]),
+            fill: 'tonexty',
+            line: { width: 0.3, color: 'grey' },
+            fillcolor: 'rgba(200, 200, 200, 0.5)',
+            hoverinfo: 'skip',
+          },
+          {
+            name: 'Flux',
+            x: sp.wave,
+            y: sp.flux,
+            line: { width: 1, color: 'black' },
+            hoverinfo: 'skip',
+          },
+        ]
+      })
 
-      traces.value = [
-        {
-          x: d.wave,
-          y: d.flux.map((v, i) => v - d.error[i]),
-          fill: 'none',
-          line: { width: 0.3, color: 'grey' },
-          hoverinfo: 'skip',
-          showlegend: false,
-        },
-        {
-          name: 'Error bar',
-          x: d.wave,
-          y: d.flux.map((v, i) => v + d.error[i]),
-          fill: 'tonexty',
-          line: { width: 0.3, color: 'grey' },
-          fillcolor: 'rgba(200, 200, 200, 0.5)',
-          hoverinfo: 'skip',
-        },
-        {
-          name: 'Flux',
-          x: d.wave,
-          y: d.flux,
-          line: { width: 1, color: 'black' },
-          hoverinfo: 'skip',
-        },
-
-        //     // {
-        //     //   // fake trace to make restframe
-        //     //   name: 'Fake Restframed',
-        //     //   x: d.wave.map((v) => v / (1.0 + d.V / 299792.45)),
-        //     //   y: d.flux,
-        //     //   type: 'lines',
-        //     //   line: { color: 'black', width: 0.1 },
-        //     //   name: 'Fake.',
-        //     //   hoverinfo: 'none',
-        //     //   showlegend: false,
-        //     //   xaxis: 'x2',
-        //     // },
-      ]
+      //     // {
+      //     //   // fake trace to make restframe
+      //     //   name: 'Fake Restframed',
+      //     //   x: d.wave.map((v) => v / (1.0 + d.V / 299792.45)),
+      //     //   y: d.flux,
+      //     //   type: 'lines',
+      //     //   line: { color: 'black', width: 0.1 },
+      //     //   name: 'Fake.',
+      //     //   hoverinfo: 'none',
+      //     //   showlegend: false,
+      //     //   xaxis: 'x2',
+      //     // },
 
       //   const shapes = d.masked.map((e, i) => ({
       //     type: 'rect',
@@ -90,8 +92,8 @@ export default defineComponent({
           overlaying: 'x',
           side: 'top',
         },
-        //yaxis: { title: 'Flux', range: yrange },
-        yaxis: { title: 'Flux' },
+        // yaxis: { title: 'Flux', range: [...yrange] },
+        yaxis: { title: 'Flux', range: null },
         margin: { l: 40, r: 0, b: 40, t: 40 },
       }
 
@@ -103,7 +105,8 @@ export default defineComponent({
     watchEffect(() => {
       if (
         selectedSpectrum.value.status == 'loaded' &&
-        selectedSpectrum.value.data.spectrum
+        selectedSpectrum.value.data.spectrum &&
+        selectedSpectrum.value.data.stats != 'error'
       ) {
         plotSpectrum(selectedSpectrum.value.data.spectrum)
       } else {
