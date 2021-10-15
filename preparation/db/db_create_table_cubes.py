@@ -64,9 +64,11 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
             [0, 0, hdr1['NAXIS1'], hdr1['NAXIS1']],
             [0, hdr1['NAXIS2'], hdr1['NAXIS2'], 0], w)
 
-        fov_fits = "{" + \
+        # coordinated of FITS file corners
+        fov_fits="{" + \
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in coords]) + "}"
+    
         fovs = dict(manga19=dict(x=[3.5, 6.0, 3.5, -3.5, -6.0, -3.5, 3.5],
                                  y=[5.33, 0.0, -5.33, -5.33, 0.0, 5.33, 5.33]),
                     manga37=dict(x=[4.8, 8.5, 4.8, -4.8, -8.5, -4.8, 4.8],
@@ -77,15 +79,17 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
                                  y=[11.8, 0.0, -11.8, -11.8, 0.0, 11.8, 11.8]),
                     manga127=dict(x=[8.57, 16.11, 8.57, -8.57, -16.1, -8.57, 8.57],
                                   y=[14.0, 0.0, -14.0, -14.0, 0.0, 14.0, 14.0]))
-
+        # MaNGA FoV
         plateifu = hdr['PLATEIFU']
         plate, ifudsg = plateifu.split('-')
         fov = fovs[f"manga{ifudsg[:-2]}"]
-        manga_fov_coords = SkyCoord(hdr['IFURA']+np.array(fov['x'])/3600.0/np.cos(np.deg2rad(hdr['IFUDEC']),
-                                    hdr['IFUDEC']+np.array(fov['y'])/3600.0,
-                                    unit=(u.deg, u.deg))
+        manga_fov_coords = SkyCoord(
+            hdr['IFURA'] + np.array(fov['x']) / 3600.0 / np.cos(np.deg2rad(hdr['IFUDEC'])),
+            hdr['IFUDEC'] + np.array(fov['y']) / 3600.0,
+            unit=(u.deg, u.deg)
+            )
 
-        manga_fov_str="{" +
+        manga_fov_str="{" + \
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in manga_fov_coords]) + "}"
 
@@ -100,7 +104,7 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
             [0, 0, hdr['NAXIS1'], hdr['NAXIS1']],
             [0, hdr['NAXIS2'], hdr['NAXIS2'], 0], w)
 
-        fov_fits="{" +
+        fov_fits="{" + \
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in coords]) + "}"
 
@@ -120,7 +124,7 @@ for q, f in enumerate(tqdm(files_manga + files_sami + files_califa + files_atlas
             [0, 0, hdr['NAXIS1'], hdr['NAXIS1']],
             [0, hdr['NAXIS2'], hdr['NAXIS2'], 0], w)
 
-        fov_fits="{" +
+        fov_fits="{" + \
             ",".join(
                 [f"{'{'}{c.ra.deg:.6f},{c.dec.deg:.6f}{'}'}" for c in coords]) + "}"
 
