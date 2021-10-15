@@ -210,11 +210,14 @@ class Cube(models.Model):
             file_cube = f"{settings.IFU_PATH}/califa_dr3/{self.califa_cube}/reduced_v2.2/{self.califa_name}.{self.califa_cube}.rscube.fits"
             file_cube = file_check(file_cube)
 
-            fits.info(file_cube)
             with fits.open(file_cube) as hdul:
                 hdr = hdul['PRIMARY'].header
                 flux = hdul['PRIMARY'].data
                 err = hdul['ERROR'].data
+
+            # fix bad error values
+            errmsk = err > 100*np.nanmedian(err)
+            err[errmsk] = np.nan
 
             wave = wave_hdr(hdr)
 
