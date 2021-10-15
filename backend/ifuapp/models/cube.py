@@ -219,6 +219,7 @@ class Cube(models.Model):
             wave = wave_hdr(hdr)
 
             w = WCS(hdr).dropaxis(-1)
+            sz = w.pixel_shape
 
             ra, dec, arcsec_x, arcsec_y, pixel_x, pixel_y = \
                 get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
