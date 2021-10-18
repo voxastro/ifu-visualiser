@@ -1,9 +1,14 @@
 <template>
   <div class="relative-position">
     <q-banner
+      v-if="selectedSpectrum.status == 'warning'"
+      class="text-black bg-warning"
+    >
+      {{ selectedSpectrum.message }}
+    </q-banner>
+    <q-banner
       v-if="selectedSpectrum.status == 'error'"
-      inline-actions
-      class="text-white bg-red"
+      class="text-white bg-negative"
     >
       {{ selectedSpectrum.message }}
     </q-banner>
@@ -116,12 +121,8 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      if (
-        selectedSpectrum.value.status == 'loaded' &&
-        selectedSpectrum.value.data.spectrum &&
-        selectedSpectrum.value.data.stats != 'error'
-      ) {
-        plotSpectrum(selectedSpectrum.value.data.spectrum)
+      if (selectedSpectrum.value.data) {
+        plotSpectrum(selectedSpectrum.value.data)
       } else {
         traces.value = []
       }

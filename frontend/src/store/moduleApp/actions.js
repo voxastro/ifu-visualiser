@@ -213,12 +213,13 @@ export function fetchSpectrum(ctx) {
     .get(url)
     .then(({ data }) => {
       ctx.commit('setSelectedSpectrum', {
-        status: 'loaded',
-        message: 'Spectrum loaded',
-        data: data,
+        status: data.spectrum.status,
+        message: data.spectrum.message,
+        data: data.spectrum,
       })
     })
     .catch((error) => {
+      // unpredictable error, likely on server side
       console.error(error.toJSON())
 
       ctx.commit('setSelectedSpectrum', {

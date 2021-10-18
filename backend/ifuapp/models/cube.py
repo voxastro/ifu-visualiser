@@ -51,7 +51,8 @@ def get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y):
         ra = coo.ra.deg
         dec = coo.dec.deg
     else:
-        raise ValueError
+        raise ValueError(
+            "Neither ra, dec, nor arcsec_x, arcsec_y were provided.")
 
     return float(ra), float(dec), arcsec_x, arcsec_y, pixel_x, pixel_y
 
@@ -155,18 +156,18 @@ class Cube(models.Model):
                 get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
             if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                flx = npl(flux[:, pixel_x, pixel_y])
-                error = npl(1.0/np.sqrt(ivar[:, pixel_x, pixel_y]))
-                wav = npl(wave)
+                flx = flux[:, pixel_x, pixel_y]
+                error = 1.0/np.sqrt(ivar[:, pixel_x, pixel_y])
+                wav = wave
                 yrange = [0, np.nanpercentile(flux[:, pixel_x, pixel_y], 99)]
 
                 output['spec'] = [
-                    dict(flux=flx, error=error, wave=wav, yrange=yrange)]
+                    dict(flux=npl(flx), error=npl(error), wave=npl(wav), yrange=npl(yrange))]
                 output['status'] = "ok"
                 output['message'] = ""
             else:
                 output['spec'] = []
-                output['status'] = "error"
+                output['status'] = "warning"
                 output['message'] = "The point is out of the cube field-of-view."
 
         elif self.survey == 'sami':
@@ -190,18 +191,17 @@ class Cube(models.Model):
                         get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
                 if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                    flx = npl(flux[:, pixel_x, pixel_y])
-                    error = npl(np.sqrt(var[:, pixel_x, pixel_y]))
-                    wav = npl(wave)
+                    flx = flux[:, pixel_x, pixel_y]
+                    error = np.sqrt(var[:, pixel_x, pixel_y])
+                    wav = wave
                     yrange = [0, np.nanpercentile(
                         flux[:, pixel_x, pixel_y], 99)]
-                    spec.append(dict(flux=flx, error=error,
-                                wave=wav, yrange=yrange))
+                    spec.append(dict(flux=npl(flx), error=npl(error),
+                                wave=npl(wav), yrange=npl(yrange)))
                     output['status'] = "ok"
                     output['message'] = ""
                 else:
-                    spec.append(null)
-                    output['status'] = "error"
+                    output['status'] = "warning"
                     output['message'] = "The point is out of the cube field-of-view."
 
             output['spec'] = spec
@@ -228,17 +228,17 @@ class Cube(models.Model):
                 get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
             if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                flx = npl(flux[:, pixel_x, pixel_y])
-                error = npl(err[:, pixel_x, pixel_y])
-                wav = npl(wave)
+                flx = flux[:, pixel_x, pixel_y]
+                error = err[:, pixel_x, pixel_y]
+                wav = wave
                 yrange = [0, np.nanpercentile(flux[:, pixel_x, pixel_y], 99.9)]
                 output['spec'] = [
-                    dict(flux=flx, error=error, wave=wav, yrange=yrange)]
+                    dict(flux=npl(flx), error=npl(error), wave=npl(wav), yrange=npl(yrange))]
                 output['status'] = "ok"
                 output['message'] = ""
             else:
                 output['spec'] = []
-                output['status'] = "error"
+                output['status'] = "warning"
                 output['message'] = "The point is out of the cube field-of-view."
 
         elif self.survey == 'atlas3d':
@@ -283,21 +283,21 @@ class Cube(models.Model):
             if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
                 ind = imsk[pixel_x, pixel_y].astype(int)
                 if np.isfinite(ind):
-                    flx = npl(flux[ind, :])
-                    error = npl(err[ind, :])
-                    wav = npl(wave)
+                    flx = flux[ind, :]
+                    error = err[ind, :]
+                    wav = wave
                     yrange = [0, np.nanpercentile(flux[ind, :], 99.9)]
                     output['spec'] = [
-                        dict(flux=flx, error=error, wave=wav, yrange=yrange)]
+                        dict(flux=npl(flx), error=npl(error), wave=npl(wav), yrange=npl(yrange))]
                     output['status'] = "ok"
                     output['message'] = ""
                 else:
                     output['spec'] = []
-                    output['status'] = "error"
+                    output['status'] = "warning"
                     output['message'] = "The point is badpixel"
             else:
                 output['spec'] = []
-                output['status'] = "error"
+                output['status'] = "warning"
                 output['message'] = "The point is out of the cube field-of-view"
 
         else:
