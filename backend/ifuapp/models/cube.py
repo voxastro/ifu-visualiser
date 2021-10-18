@@ -16,10 +16,10 @@ from ifuapp.utils import npl
 from ifuapp.pagination import EnhancedPageNumberPagination
 
 from astropy.io import fits
-from astropy.wcs import WCS, utils as wutils
+from astropy.wcs import WCS, utils as wutils, FITSFixedWarning
 from astropy.coordinates import SkyCoord
-
-from ..utils import apply_search
+import warnings
+warnings.filterwarnings('ignore', category=FITSFixedWarning, append=True)
 
 
 def file_check(file):
@@ -144,6 +144,7 @@ class Cube(models.Model):
             file_cube = file_check(file_cube)
 
             with fits.open(file_cube) as hdul:
+                hdul.verify('fix')
                 hdr = hdul['FLUX'].header
                 flux = hdul['FLUX'].data
                 ivar = hdul['IVAR'].data

@@ -1,7 +1,8 @@
 import numpy as np
 from django.db import models
+from django.shortcuts import get_object_or_404
 
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, response
 from rest_flex_fields import FlexFieldsModelSerializer
 
 import graphene
@@ -56,14 +57,46 @@ class CubeSerializer(FlexFieldsModelSerializer):
         dec = request.query_params.get('dec', None)
         arcsec_x = request.query_params.get('arcsec_x', None)
         arcsec_y = request.query_params.get('arcsec_y', None)
-
-        return obj.get_spectrum(ra=ra, dec=dec, arcsec_x=arcsec_x, arcsec_y=arcsec_y)
+        args = [v for v in (ra, dec, arcsec_x, arcsec_y) if v is not None]
+        return obj.get_spectrum(*args)
 
     def get_dist(self, obj):
         try:
             return obj.dist
         except:
             return None
+
+
+# class CubeViewSet(viewsets.ReadOnlyModelViewSet):
+#     __doc__ = Cube.__doc__
+
+#     pagination_class = EnhancedPageNumberPagination
+#     serializer_class = CubeSerializer
+
+#     def get_queryset(self):
+#         search_query = self.request.query_params.get('q', False)
+#         sortby = self.request.query_params.get('sortby', 'cube_id')
+#         # in case sort by related field
+#         sortby = sortby.replace('.', '__')
+#         descending = self.request.query_params.get('descending', 'false')
+
+#         if descending == 'true':
+#             sortby = f"-{sortby}"
+
+#         relations = (
+#             'atlas_param',
+#             'atlas_morphkin',
+#             'califa_object',
+#             'sami_cube_obs',
+#             'sami_inputcat_gama',
+#             'manga_drp',
+#         )
+#         qsall = Cube.objects.all().select_related(*relations)
+
+#         if search_query:
+#             return apply_search(qsall, search_query).order_by(sortby)
+#         else:
+#             return qsall.order_by(sortby)
 
 
 class CubeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -96,6 +129,21 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
             return apply_search(qsall, search_query).order_by(sortby)
         else:
             return qsall.order_by(sortby)
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        queryset_paginated = self.paginate_queryset(queryset)
+        omit = ['spectrum', 'fov_fits', 'fov_ifu']
+        serializer = self.serializer_class(queryset_paginated, many=True,
+                                           context={'request': request},
+                                           omit=omit)
+        return self.get_paginated_response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = self.get_queryset()
+        cube = get_object_or_404(queryset, pk=pk)
+        serializer = self.serializer_class(cube, context={'request': request})
+        return response.Response(serializer.data)
 
 
 ###############################################################################
