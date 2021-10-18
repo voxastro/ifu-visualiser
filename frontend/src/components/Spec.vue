@@ -1,5 +1,18 @@
 <template>
-  <Plotly :traces="traces" :layout="layout" :config="config" />
+  <div class="relative-position">
+    <q-banner
+      v-if="selectedSpectrum.status == 'error'"
+      inline-actions
+      class="text-white bg-red"
+    >
+      {{ selectedSpectrum.message }}
+    </q-banner>
+    <Plotly :traces="traces" :layout="layout" :config="config" />
+
+    <q-inner-loading :showing="selectedSpectrum.status == 'loading'">
+      <q-spinner color="primary" size="3em" :thickness="2" />
+    </q-inner-loading>
+  </div>
 </template>
 
 <script>

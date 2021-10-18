@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { omitColumnsColumnSettings } from 'src/utils.js'
+import { omitColumnsColumnSettings, messages } from 'src/utils.js'
 
 export function resolveSesameQuery(ctx) {
   console.log('Query Resolving....', ctx.state.queryString)
@@ -219,10 +219,11 @@ export function fetchSpectrum(ctx) {
       })
     })
     .catch((error) => {
-      console.error(error)
+      console.error(error.toJSON())
+
       ctx.commit('setSelectedSpectrum', {
         status: 'error',
-        message: 'error',
+        message: messages.serverProblem,
         data: null,
       })
     })
