@@ -54,8 +54,13 @@
   font-display: swap;
 }
 
-code {
-  background-color: #ffeeee;
-  padding: 1px 3px;
-  color: #901616;
+// ///////////////////////////////////////////////////////////////////
+.q-markdown--token {
+  background: $grey-9;
+  color: $grey-10;
+  border: $grey-2 solid 4px;
+}
+.q-markdown--code {
+  background: $dark;
+  color: $grey-10;
 }

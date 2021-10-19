@@ -2,11 +2,13 @@ import { Store } from '../store'
 
 const routes = [
   {
+    name: 'main',
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Landing.vue') }],
   },
   {
+    name: 'search',
     path: '/search',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Search.vue') }],
@@ -29,11 +31,13 @@ const routes = [
     ],
   },
   {
+    name: 'docs',
     path: '/docs',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Docs.vue') }],
   },
   {
+    name: 'about',
     path: '/about',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/About.vue') }],

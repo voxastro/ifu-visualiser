@@ -3,6 +3,7 @@
     <div class="row justify-center">
       <div class="col-10 q-mt-md">
         <div class="text-h3 text-weight-light">About</div>
+        <p class="text-body1 q-mt-xl">TBW</p>
       </div>
     </div>
   </q-page>

@@ -1,5 +1,9 @@
 {
   "@quasar/apollo": {
     "typescript": false
+  },
+  "@quasar/qmarkdown": {
+    "import_md": true,
+    "import_vmd": true
   }
 }
