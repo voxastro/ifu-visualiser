@@ -1,23 +1,15 @@
 <template>
   <q-page>
     <div class="row justify-center">
-      <div class="col-10 q-mt-md">
-        <div class="row">
-          <q-card v-if="tocTree" class="col-2 gt-sm" flat>
-            <q-card-section>
-              <TocContent :tocTree="tocTree" :denseLevel="2" />
-            </q-card-section>
-          </q-card>
-          <q-markdown
-            ref="markdown"
-            :src="md_docs"
-            toc
-            @data="onToc"
-            class="col"
-          />
-          <div class="col-2 gt-sm"></div>
-        </div>
-      </div>
+      <div class="col-1"></div>
+      <q-card v-if="tocTree" class="col-2 gt-md" flat>
+        <q-card-section>
+          <TocContent :tocTree="tocTree" :denseLevel="2" />
+        </q-card-section>
+      </q-card>
+      <q-markdown ref="markdown" :src="md_docs" toc @data="onToc" class="col" />
+      <div class="col-1"></div>
+      <div class="col-2 gt-md"></div>
     </div>
   </q-page>
 </template>

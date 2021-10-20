@@ -6,7 +6,7 @@
           <div class="row justify-center items-center">
             <img
               alt="IFU visualiser logo"
-              src="~assets/logo_IFU.svg"
+              src="~assets/logos/logo_IFU.svg"
               style="width: 80px; height: 80px"
               class="q-mr-lg"
             />

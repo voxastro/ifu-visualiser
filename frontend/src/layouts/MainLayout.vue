@@ -9,7 +9,7 @@
         <div class="row items-center">
           <img
             alt="IFU visualiser logo"
-            src="~assets/logo_IFU.svg"
+            src="~assets/logos/logo_IFU.svg"
             style="width: 30px; height: 30px"
             class="q-mr-sm"
           />
