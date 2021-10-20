@@ -1,7 +1,9 @@
 Documentation
 ===
 
+# General description
 
+TBW
 # Query Language
 
 ## Basic syntax
@@ -49,11 +51,11 @@ In addition to coordinate Cone queries, user can enter any astronomical object n
 :::
 For example, 
 
-[`Coma+cluster`](search?q=Coma+cluster)
+[`NGC 6173`](search?q=NGC+6173)
 
 will be converted to
 
-[`cone(194.95291667, 27.98055556, 0.015)`](search?q=cone(194.95291667,+27.98055556,+0.015))
+[`cone(247.437155, 40.811611, 0.015)`](search?q=cone(247.437155,+40.811611,+0.015))
 :::
 
 

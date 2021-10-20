@@ -66,3 +66,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss">
+// Override some styles
+
+.q-markdown--token {
+  background: #a91c571a;
+  color: $grey-9;
+  border: $grey-2 solid 1px;
+  padding: 0px 4px;
+  border-radius: 7px;
+}
+</style>
