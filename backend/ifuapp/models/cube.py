@@ -157,10 +157,10 @@ class Cube(models.Model):
                 get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
             if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                flx = flux[:, pixel_x, pixel_y]
-                error = 1.0/np.sqrt(ivar[:, pixel_x, pixel_y])
+                flx = flux[:, pixel_y, pixel_x]
+                error = 1.0/np.sqrt(ivar[:, pixel_y, pixel_x])
                 wav = wave
-                yrange = [0, np.nanpercentile(flux[:, pixel_x, pixel_y], 99)]
+                yrange = [0, np.nanpercentile(flux[:, pixel_y, pixel_x], 99)]
 
                 output['spec'] = [
                     dict(flux=npl(flx), error=npl(error), wave=npl(wav), yrange=npl(yrange))]
@@ -192,11 +192,11 @@ class Cube(models.Model):
                         get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
                 if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                    flx = flux[:, pixel_x, pixel_y]
-                    error = np.sqrt(var[:, pixel_x, pixel_y])
+                    flx = flux[:, pixel_y, pixel_x]
+                    error = np.sqrt(var[:, pixel_y, pixel_x])
                     wav = wave
                     yrange = [0, np.nanpercentile(
-                        flux[:, pixel_x, pixel_y], 99)]
+                        flux[:, pixel_y, pixel_x], 99)]
                     spec.append(dict(flux=npl(flx), error=npl(error),
                                 wave=npl(wav), yrange=npl(yrange)))
                     output['status'] = "ok"
@@ -229,10 +229,10 @@ class Cube(models.Model):
                 get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
             if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                flx = flux[:, pixel_x, pixel_y]
-                error = err[:, pixel_x, pixel_y]
+                flx = flux[:, pixel_y, pixel_x]
+                error = err[:, pixel_y, pixel_x]
                 wav = wave
-                yrange = [0, np.nanpercentile(flux[:, pixel_x, pixel_y], 99.9)]
+                yrange = [0, np.nanpercentile(flux[:, pixel_y, pixel_x], 99.9)]
                 output['spec'] = [
                     dict(flux=npl(flx), error=npl(error), wave=npl(wav), yrange=npl(yrange))]
                 output['status'] = "ok"
