@@ -265,12 +265,11 @@ class Cube(models.Model):
             imsk[-np.min(pix_y) + pix_y,
                  -np.min(pix_x) + pix_x] = np.arange(len(pix_x))
 
-            ind_center = np.argwhere((pix_x == 0) & (pix_y == 0))[0][0]
+            ind_center = np.argmin(np.linalg.norm([pix_x, pix_y], axis=0))
             w = WCS(naxis=2)
-            # w.wcs.crpix = [-np.min(pix_x) + pix_x[ind_center],
-            #                -np.min(pix_y) + pix_y[ind_center]]
-            w.wcs.crpix = [-np.min(pix_y) + pix_y[ind_center],
-                           -np.min(pix_x) + pix_x[ind_center]]
+
+            w.wcs.crpix = [-np.min(pix_x) + pix_x[ind_center],
+                           -np.min(pix_y) + pix_y[ind_center]]
 
             w.wcs.crval = [hdr['TCRVL6'], hdr['TCRVL7']]
             w.wcs.ctype = ['RA---TAN', 'DEC--TAN']
@@ -282,8 +281,9 @@ class Cube(models.Model):
                 get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
 
             if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
-                ind = imsk[pixel_x, pixel_y].astype(int)
+                ind = imsk[pixel_x, pixel_y]
                 if np.isfinite(ind):
+                    ind = ind.astype(int)
                     flx = flux[ind, :]
                     error = err[ind, :]
                     wav = wave
@@ -295,7 +295,7 @@ class Cube(models.Model):
                 else:
                     output['spec'] = []
                     output['status'] = "warning"
-                    output['message'] = "The point is badpixel"
+                    output['message'] = "The point is badpixel or out of coverage"
             else:
                 output['spec'] = []
                 output['status'] = "warning"
