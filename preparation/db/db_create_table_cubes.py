@@ -186,6 +186,7 @@ def hdr2fov(w, naxis1, naxis2):
 def process_file(job, testplot=False):
     f = job[0]
     q = job[1]
+    print(q, f)
     hdr = fits.getheader(f)
     file_noext = os.path.basename(f).split('.fits')[0]
 
@@ -352,8 +353,8 @@ if __name__ == '__main__':
     # for test run
     # path_manga = "/data/manga_dr16/spectro/redux/v2_4_3/9506//stack/manga-*-LOGCUBE.fit*"
     # path_sami = "/data/sami_dr3/98880/*_cube_blue.fits*"
-    # path_data = "/data"
-    path_data = "/Users/ik52/obs/ifu-visualiser-data"
+    path_data = "/data"
+    # path_data = "/Users/ik52/obs/ifu-visualiser-data"
     ofile = 'table_cubes_test.csv'
 
     path_manga = f"{path_data}/manga_dr16/spectro/redux/v2_4_3/*/stack/manga-*-LOGCUBE.fit*"
@@ -387,7 +388,7 @@ if __name__ == '__main__':
                      'U100', 'U100', 'U100', 'U100',
                      'U100', 'U100', 'U200', 'U20000'))
 
-    files = files_manga + files_sami + files_califa + files_atlas
+    files = files_manga + files_sami + files_califa #+ files_atlas
 
     jobs = [[f, q] for q, f in enumerate(files)]
 
