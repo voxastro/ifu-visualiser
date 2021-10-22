@@ -57,3 +57,4 @@ services:
     working_dir: /e2e
     volumes:
       - .:/e2e
+    entrypoint: bash -c "npx wait-on http://testserver:8080/api && cypress run"
