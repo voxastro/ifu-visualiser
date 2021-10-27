@@ -2,12 +2,24 @@
   <q-page>
     <div class="row justify-center">
       <div class="col-1"></div>
-      <q-card v-if="tocTree" class="col-2 gt-md" flat>
-        <q-card-section>
-          <TocContent :tocTree="tocTree" :denseLevel="2" />
-        </q-card-section>
-      </q-card>
-      <q-markdown ref="markdown" :src="md_docs" toc @data="onToc" class="col" />
+      <div class="gt-md col-2">
+        <q-card v-if="tocTree" class="fixed" flat>
+          <q-card-section>
+            <TocContent :tocTree="tocTree" :denseLevel="2" />
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="col">
+        <q-markdown
+          ref="markdown"
+          :src="md_docs"
+          toc
+          @data="onToc"
+          class="col"
+        />
+
+        <DocsTablesInfo />
+      </div>
       <div class="col-1"></div>
       <div class="col-2 gt-md"></div>
     </div>
@@ -15,17 +27,21 @@
 </template>
 
 <script>
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, ref, watchEffect, computed } from 'vue'
 import md_docs from '../markdown/docs.md'
 import TocContent from '../components/TocContent.vue'
+import DocsTablesInfo from '../components/DocsTablesInfo.vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Docs',
-  components: { TocContent },
+  components: { TocContent, DocsTablesInfo },
   setup() {
+    const store = useStore()
     const markdown = ref(null)
     const toc = ref(null)
     const tocTree = ref(null)
+    const tableColumns = computed(() => store.state.tableColumnsObject)
 
     const { getScrollTarget, setVerticalScrollPosition } = scroll
 
@@ -37,8 +53,20 @@ export default defineComponent({
       setVerticalScrollPosition(target, offset, duration)
     }
 
+    const tableColumnsSorted = [
+      ...tableColumns.value.filter((e) => e.label == 'cube'),
+      ...tableColumns.value.filter((e) => e.label != 'cube'),
+    ]
+
     const onToc = (tc) => {
-      toc.value = tc
+      // Manually extend TOC by table description
+      const tcExt = tableColumnsSorted.map((e) => ({
+        id: e.label,
+        label: e.label,
+        level: 2,
+        children: [],
+      }))
+      toc.value = [...tc, ...tcExt]
     }
 
     watchEffect(() => {
@@ -64,8 +92,8 @@ export default defineComponent({
 
 .q-markdown--token {
   background: #a91c571a;
-  color: $grey-9;
-  border: $grey-2 solid 1px;
+  color: $purple-9;
+  border: $grey-6 solid 1px;
   padding: 0px 4px;
   border-radius: 7px;
 }
