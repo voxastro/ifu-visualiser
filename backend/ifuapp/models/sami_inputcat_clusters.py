@@ -15,20 +15,17 @@ from graphene.types.generic import GenericScalar
 from graphene_django_pagination import DjangoPaginationConnectionField
 
 
-class SamiInputcatGama(models.Model):
+class SamiInputcatClusters(models.Model):
     """
-    SAMI input catalog basedon GAMA survey.
+    SAMI input catalogue for cluster regions.
 
     Column description taken from https://datacentral.org.au/services/schema/#sami.
     """
     catid = models.BigIntegerField(primary_key=True, help_text="SAMI Galaxy ID")
     ra_obj = models.FloatField(blank=True, null=True, help_text="J2000 Right Ascension of object (deg)")
     dec_obj = models.FloatField(blank=True, null=True, help_text="J2000 Declination of object (deg)")
-    ra_ifu = models.FloatField(blank=True, null=True, help_text="J2000 Right Ascension of nominal IFU centre (deg)")
-    dec_ifu = models.FloatField(blank=True, null=True, help_text="J2000 Declination of nominal IFU centre (deg)")
-    r_petro = models.FloatField(blank=True, null=True, help_text="Extinction-corrected SDSS DR7 r-band Petrosian mag")
+    r_petro = models.FloatField(blank=True, null=True, help_text="Extinction-corrected r-band Petrosian mag")
     r_auto = models.FloatField(blank=True, null=True, help_text="r-band SExtractor auto magnitude")
-    z_tonry = models.FloatField(blank=True, null=True, help_text="Flow-corrected redshift")
     z_spec = models.FloatField(blank=True, null=True, help_text="Spectroscopic redshift")
     m_r = models.FloatField(blank=True, null=True, help_text="Absolute r-band magnitude")
     r_e = models.FloatField(blank=True, null=True, help_text="r-band major axis effective radius (arcsec)")
@@ -37,12 +34,14 @@ class SamiInputcatGama(models.Model):
     mu_2re = models.FloatField(blank=True, null=True, help_text="r-band surface brightness at 2 effective radii (mag/arcsec^2)")
     ellip = models.FloatField(blank=True, null=True, help_text="r-band ellipticity")
     pa = models.FloatField(blank=True, null=True, help_text="r-band position angle (deg)")
-    mstar = models.FloatField(blank=True, null=True, help_text="Logarithm of stellar mass (dex solar masses)")
     g_i = models.FloatField(blank=True, null=True, help_text="(g-i) colour")
-    a_g = models.FloatField(blank=True, null=True, help_text="g-band extinction")
+    mstar = models.FloatField(blank=True, null=True, help_text="Logarithm of stellar mass (dex)")
+    r_on_rtwo = models.FloatField(blank=True, null=True, help_text="Projected distance from cluster centre normalised by R200")
+    v_on_sigma = models.FloatField(blank=True, null=True, help_text="Line-of-sight velocity relative to cluster redshift normalised by cluster velocity dispersion measured within R200")
+    is_mem = models.BooleanField(blank=True, null=True, help_text="Flag indicating cluster membership (1=member, 0=non-member)")
     surv_sami = models.IntegerField(blank=True, null=True, help_text="Priority class for targets")
     bad_class = models.IntegerField(blank=True, null=True, help_text="Flag for bad or problem objects")
 
     class Meta:
         managed = False
-        db_table = 'sami_inputcat_gama'
+        db_table = 'sami_inputcat_clusters'

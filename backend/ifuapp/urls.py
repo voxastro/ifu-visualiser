@@ -57,6 +57,18 @@ router.register(r'sami_cube_obs', views.SamiCubeObsViewSet,
                 basename="sami_cube_obs")
 router.register(r'sami_inputcat_gama', views.SamiInputcatGamaViewSet,
                 basename="sami_inputcat_gama")
+router.register(r'sami_inputcat_filler', views.SamiInputcatFillerViewSet,
+                basename="sami_inputcat_filler")
+router.register(r'sami_densitycat', views.SamiDensityCatViewSet,
+                basename="sami_densitycat")
+# router.register(r'sami_starcat_clust', views.SamiStarCatClustViewSet,
+#                 basename="sami_starcat_clust")
+router.register(r'sami_inputcat_clusters', views.SamiInputcatClustersViewSet,
+                basename="sami_inputcat_clusters")
+router.register(r'sami_mgephotom_unreg', views.SamiMGEPhotomUnregViewSet,
+                basename="sami_mgephotom_unreg")
+router.register(r'sami_gaskinpa', views.SamiGaskinPAViewSet,
+                basename="sami_gaskin")
 router.register(r'manga_drp', views.MangaDrpViewSet,
                 basename="manga_drp")
 

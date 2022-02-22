@@ -23,6 +23,12 @@ from ifuapp.views import (
     CalifaObjectSerializer,
     SamiCubeObsSerializer,
     SamiInputcatGamaSerializer,
+    SamiInputcatFillerSerializer,
+    SamiDensityCatSerializer,
+#     SamiStarCatClustSerializer,
+    SamiInputcatClustersSerializer,
+    SamiMGEPhotomUnregSerializer,
+    SamiGaskinPASerializer,
     MangaDrpSerializer,
 )
 
@@ -48,6 +54,12 @@ class CubeSerializer(FlexFieldsModelSerializer):
             'califa_object': (CalifaObjectSerializer, {'many': False}),
             'sami_cube_obs': (SamiCubeObsSerializer, {'many': False}),
             'sami_inputcat_gama': (SamiInputcatGamaSerializer, {'many': False}),
+            'sami_inputcat_filler': (SamiInputcatFillerSerializer, {'many': False}),
+            'sami_densitycat': (SamiDensityCatSerializer, {'many': False}),
+            # 'sami_starcat_clust': (SamiStarCatClustSerializer, {'many': False}),
+            'sami_inputcat_clusters': (SamiInputcatClustersSerializer, {'many': False}),
+            'sami_mgephotom_unreg': (SamiMGEPhotomUnregSerializer, {'many': False}),
+            'sami_mgephotom_unreg': (SamiGaskinPASerializer, {'many': False}),
             'manga_drp': (MangaDrpSerializer, {'many': False}),
         }
 
@@ -121,6 +133,11 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
             'califa_object',
             'sami_cube_obs',
             'sami_inputcat_gama',
+            'sami_inputcat_filler',
+            'sami_densitycat',
+            # sami_starcat_clust',
+            'sami_inputcat_clusters',
+            # 'sami_mgephotom_unreg',
             'manga_drp',
         )
         qsall = Cube.objects.all().select_related(*relations)
