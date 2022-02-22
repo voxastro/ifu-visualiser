@@ -165,7 +165,7 @@ class Cube(models.Model):
 
         if self.survey == 'manga':
             plate, idudsgn = self.manga_plateifu.split("-")
-            file_cube = f"{settings.IFU_PATH}/manga_dr16/spectro/redux/v2_4_3/{plate}/stack/manga-{self.manga_plateifu}-LOGCUBE.fits"
+            file_cube = f"{settings.IFU_PATH}/manga_dr17/spectro/redux/MPL-11/{plate}/stack/manga-{self.manga_plateifu}-LOGCUBE.fits"
             file_cube = file_check(file_cube)
 
             with fits.open(file_cube) as hdul:
