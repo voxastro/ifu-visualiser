@@ -31,9 +31,6 @@ CREATE TABLE atlas_param (
 
 UPDATE atlas_param SET atlas_name=REPLACE(atlas_name,' ','');
 
--- ALTER TABLE atlas_param ADD COLUMN cube_id integer REFERENCES cube (cube_id);
--- UPDATE atlas_param AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.atlas_name = c.atlas_name;
-
 ALTER TABLE atlas_param OWNER TO ifu_user;
 ANALYZE atlas_param;
 
@@ -70,15 +67,9 @@ UPDATE atlas_morphkin SET dust=REPLACE(dust,' ','');
 UPDATE atlas_morphkin SET kin_struct=REPLACE(kin_struct,' ','');
 UPDATE atlas_morphkin SET kin_group=REPLACE(kin_group,' ','');
 
--- ALTER TABLE cube ADD CONSTRAINT cube_atlas_name_fkey FOREIGN KEY (atlas_name) REFERENCES atlas_morphkin(atlas_name);
-
--- ALTER TABLE atlas_morphkin ADD COLUMN cube_id integer REFERENCES cube (cube_id);
--- UPDATE atlas_morphkin AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.atlas_name = c.atlas_name;
 
 ALTER TABLE atlas_morphkin OWNER TO ifu_user;
 ANALYZE atlas_morphkin;
-
-
 
 
 -------------------------------------------------------------------------------
@@ -143,13 +134,6 @@ CREATE TABLE califa_object  (
 \copy califa_object FROM '../califa/califadr3.objects.csv' DELIMITER ',' CSV HEADER;
 
 UPDATE califa_object SET target_name=REPLACE(target_name,' ','');
-
-
--- ALTER TABLE cube ADD CONSTRAINT cube_califa_object_fkey FOREIGN KEY (califa_id) REFERENCES califa_object(califa_id);
-
--- UPDATE califa_object AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.califaid = c.califa_id;
--- ALTER TABLE califa_object ADD COLUMN cube_id integer REFERENCES cube (cube_id);
--- UPDATE califa_object AS a SET cube_id=c.cube_id FROM cube AS c WHERE a.califaid = c.califa_id;
 
 ALTER TABLE califa_object OWNER TO ifu_user;
 ANALYZE califa_object;
@@ -287,25 +271,6 @@ UPDATE sami_densitycat SET surfacedensity_err_m19=NULL WHERE surfacedensity_err_
 
 ANALYZE sami_densitycat;
 
--------------------------------------------------------------------------------
-
--- DROP TABLE IF EXISTS sami_starcat_clust CASCADE;
-
--- CREATE TABLE sami_starcat_clust (
---     ind             integer,
---     catid           bigint PRIMARY KEY,
---     ra_star         real,
---     dec_star        real,
---     r               real,
---     priority        integer
--- );
-
--- \copy sami_starcat_clust FROM '../sami/sami_dr3.FstarCatClusters.csv' DELIMITER ',' CSV HEADER;
--- ALTER TABLE sami_starcat_clust DROP COLUMN ind;
-
--- ANALYZE sami_starcat_clust;
-
--------------------------------------------------------------------------------
 
 DROP TABLE IF EXISTS sami_inputcat_clusters CASCADE;
 
@@ -349,8 +314,8 @@ ANALYZE sami_inputcat_clusters;
 DROP TABLE IF EXISTS sami_mgephotom_unreg CASCADE;
 
 CREATE TABLE sami_mgephotom_unreg (
-    ind             integer,
-    catid           bigint PRIMARY KEY,
+    ind             integer PRIMARY KEY,
+    catid           bigint,
     photometry      varchar(8),
     remge           real,
     mmge            real,
@@ -363,7 +328,7 @@ CREATE TABLE sami_mgephotom_unreg (
 );
 
 \copy sami_mgephotom_unreg FROM '../sami/sami_dr3.MGEPhotomUnregDR3.csv' DELIMITER ',' CSV HEADER;
-ALTER TABLE sami_mgephotom_unreg DROP COLUMN ind;
+-- ALTER TABLE sami_mgephotom_unreg DROP COLUMN ind;
 UPDATE sami_mgephotom_unreg SET remge=NULL WHERE remge='NaN';
 UPDATE sami_mgephotom_unreg SET mmge=NULL WHERE mmge='NaN';
 UPDATE sami_mgephotom_unreg SET pamge=NULL WHERE pamge='NaN';
@@ -380,9 +345,9 @@ DROP TABLE IF EXISTS sami_gaskin CASCADE;
 CREATE TABLE sami_gaskin (
      ind                integer,
      cubeid             varchar(80),
-     cubeidpub          varchar(15),
+     cubeidpub          varchar(15) PRIMARY KEY,
      cubename           varchar(80),
-     catid              bigint PRIMARY KEY,
+     catid              bigint,
      pa_gaskin          real,
      pa_gaskin_err      real
     );
@@ -635,11 +600,12 @@ UPDATE cube AS c SET sami_densitycat=t.catid FROM sami_densitycat AS t WHERE c.s
 ALTER TABLE cube ADD COLUMN sami_inputcat_clusters bigint REFERENCES sami_inputcat_clusters(catid);
 UPDATE cube AS c SET sami_inputcat_clusters=t.catid FROM sami_inputcat_clusters AS t WHERE c.sami_catid = t.catid;
 
-ALTER TABLE cube ADD COLUMN sami_mgephotom_unreg bigint REFERENCES sami_mgephotom_unreg(catid);
-UPDATE cube AS c SET sami_mgephotom_unreg=t.catid FROM sami_mgephotom_unreg AS t WHERE c.sami_catid = t.catid;
+ALTER TABLE sami_mgephotom_unreg ADD COLUMN cube integer REFERENCES cube(cube_id);
+UPDATE sami_mgephotom_unreg AS t SET cube=c.cube_id FROM cube AS c WHERE c.sami_catid = t.catid;
 
-ALTER TABLE cube ADD COLUMN sami_gaskin bigint REFERENCES sami_gaskin(catid);
-UPDATE cube AS c SET sami_gaskin=t.catid FROM sami_gaskin AS t WHERE c.sami_catid = t.catid;
+
+ALTER TABLE sami_gaskin ADD COLUMN cube integer REFERENCES cube(cube_id);
+UPDATE sami_gaskin AS t SET cube=c.cube_id FROM cube AS c WHERE c.sami_catid = t.catid;
 
 ALTER TABLE cube ADD COLUMN manga_drp varchar(11) REFERENCES manga_drp(plateifu);
 UPDATE cube AS c SET manga_drp=t.plateifu FROM manga_drp AS t WHERE c.manga_plateifu = t.plateifu;

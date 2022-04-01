@@ -118,28 +118,16 @@ class Cube(models.Model):
                                            related_name='cubes', related_query_name='cubes')
 
     sami_inputcat_filler = models.ForeignKey('SamiInputcatFiller', models.DO_NOTHING,
-                                           db_column='sami_inputcat_filler', blank=True, null=True,
-                                           related_name='cubes', related_query_name='cubes')
+                                             db_column='sami_inputcat_filler', blank=True, null=True,
+                                             related_name='cubes', related_query_name='cubes')
 
     sami_densitycat = models.ForeignKey('SamiDensityCat', models.DO_NOTHING,
-                                           db_column='sami_densitycat', blank=True, null=True,
-                                           related_name='cubes', related_query_name='cubes')
-
-    # sami_starcat_clust = models.ForeignKey('SamiStarCatClust', models.DO_NOTHING,
-    #                                        db_column='sami_starcat_clust', blank=True, null=True,
-    #                                        related_name='cubes', related_query_name='cubes')
+                                        db_column='sami_densitycat', blank=True, null=True,
+                                        related_name='cubes', related_query_name='cubes')
 
     sami_inputcat_clusters = models.ForeignKey('SamiInputcatClusters', models.DO_NOTHING,
-                                           db_column='sami_inputcat_clusters', blank=True, null=True,
-                                           related_name='cubes', related_query_name='cubes')
-
-    sami_mgephotom_unreg = models.ForeignKey('SamiMGEPhotomUnreg', models.DO_NOTHING,
-                                          db_column='sami_mgephotom_unreg', blank=True, null=True,
-                                          related_name='cubes', related_query_name='cubes')
-
-    sami_gaskin = models.ForeignKey('SamiGaskinPA', models.DO_NOTHING,
-                                          db_column='sami_gaskin', blank=True, null=True,
-                                          related_name='cubes', related_query_name='cubes')
+                                               db_column='sami_inputcat_clusters', blank=True, null=True,
+                                               related_name='cubes', related_query_name='cubes')
 
     manga_drp = models.ForeignKey('MangaDrp', models.DO_NOTHING,
                                   db_column='manga_drp', blank=True, null=True,

@@ -19,14 +19,16 @@ from ifuapp.models import SamiGasKinPA
 ###############################################################################
 # REST DRF representation (Serializers and ViewSets)
 
-class SamiGaskinPASerializer(FlexFieldsModelSerializer):
+
+class SamiGasKinPASerializer(FlexFieldsModelSerializer):
     class Meta:
         model = SamiGasKinPA
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('cube',)
 
 
-class SamiGaskinPAViewSet(viewsets.ReadOnlyModelViewSet):
+class SamiGasKinPAViewSet(viewsets.ReadOnlyModelViewSet):
     __doc__ = SamiGasKinPA.__doc__
     queryset = SamiGasKinPA.objects.all()
     pagination_class = EnhancedPageNumberPagination
-    serializer_class = SamiGaskinPASerializer
+    serializer_class = SamiGasKinPASerializer

@@ -61,22 +61,18 @@ router.register(r'sami_inputcat_filler', views.SamiInputcatFillerViewSet,
                 basename="sami_inputcat_filler")
 router.register(r'sami_densitycat', views.SamiDensityCatViewSet,
                 basename="sami_densitycat")
-# router.register(r'sami_starcat_clust', views.SamiStarCatClustViewSet,
-#                 basename="sami_starcat_clust")
 router.register(r'sami_inputcat_clusters', views.SamiInputcatClustersViewSet,
                 basename="sami_inputcat_clusters")
 router.register(r'sami_mgephotom_unreg', views.SamiMGEPhotomUnregViewSet,
                 basename="sami_mgephotom_unreg")
-router.register(r'sami_gaskinpa', views.SamiGaskinPAViewSet,
+router.register(r'sami_gaskinpa', views.SamiGasKinPAViewSet,
                 basename="sami_gaskin")
 router.register(r'manga_drp', views.MangaDrpViewSet,
                 basename="manga_drp")
 
 
 urlpatterns = [
-    # path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('api/', include(router.urls)),
-    # re_path(r'api/swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'api/swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('api/swagger/', schema_view.with_ui('swagger', cache_timeout=0),

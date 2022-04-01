@@ -19,10 +19,11 @@ from ifuapp.models import SamiMGEPhotomUnreg
 ###############################################################################
 # REST DRF representation (Serializers and ViewSets)
 
+
 class SamiMGEPhotomUnregSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = SamiMGEPhotomUnreg
-        fields = '__all__'
+        exclude = ('ind',)
 
 
 class SamiMGEPhotomUnregViewSet(viewsets.ReadOnlyModelViewSet):

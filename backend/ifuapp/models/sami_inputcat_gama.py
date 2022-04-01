@@ -17,7 +17,7 @@ from graphene_django_pagination import DjangoPaginationConnectionField
 
 class SamiInputcatGama(models.Model):
     """
-    SAMI input catalog basedon GAMA survey.
+    SAMI input catalog based on GAMA survey.
 
     Column description taken from https://datacentral.org.au/services/schema/#sami.
     """

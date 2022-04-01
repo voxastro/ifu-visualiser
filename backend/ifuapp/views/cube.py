@@ -25,10 +25,9 @@ from ifuapp.views import (
     SamiInputcatGamaSerializer,
     SamiInputcatFillerSerializer,
     SamiDensityCatSerializer,
-#     SamiStarCatClustSerializer,
     SamiInputcatClustersSerializer,
     SamiMGEPhotomUnregSerializer,
-    SamiGaskinPASerializer,
+    SamiGasKinPASerializer,
     MangaDrpSerializer,
 )
 
@@ -46,7 +45,6 @@ class CubeSerializer(FlexFieldsModelSerializer):
         # hide related fields to avoid field duplication
         fields = [
             f.name for f in Cube._meta.fields if f.related_model is None] + ['spectrum', 'dist']
-        # omit = ['spectrum', 'dist']
 
         expandable_fields = {
             'atlas_param': (AtlasParamSerializer, {'many': False}),
@@ -56,10 +54,9 @@ class CubeSerializer(FlexFieldsModelSerializer):
             'sami_inputcat_gama': (SamiInputcatGamaSerializer, {'many': False}),
             'sami_inputcat_filler': (SamiInputcatFillerSerializer, {'many': False}),
             'sami_densitycat': (SamiDensityCatSerializer, {'many': False}),
-            # 'sami_starcat_clust': (SamiStarCatClustSerializer, {'many': False}),
             'sami_inputcat_clusters': (SamiInputcatClustersSerializer, {'many': False}),
-            'sami_mgephotom_unreg': (SamiMGEPhotomUnregSerializer, {'many': False}),
-            'sami_mgephotom_unreg': (SamiGaskinPASerializer, {'many': False}),
+            'sami_mgephotom_unreg': (SamiMGEPhotomUnregSerializer, {'many': True}),
+            'sami_gaskin': (SamiGasKinPASerializer, {'many': True}),
             'manga_drp': (MangaDrpSerializer, {'many': False}),
         }
 
