@@ -7,7 +7,7 @@ class SamiGasKinPA(models.Model):
     Column description taken from https://datacentral.org.au/services/schema/#sami.
     """
     cubeid = models.CharField(blank=True, null=True, max_length=80, help_text="Internal unique cube ID")
-    cubeidpub = models.CharField(primary_key=True, blank=True, null=True, max_length=15, help_text="Public unique cube ID for data release")
+    cubeidpub = models.CharField(primary_key=True, blank=True, max_length=15, help_text="Public unique cube ID for data release")
     cubename = models.CharField(blank=True, null=True, max_length=80, help_text="Internal unique cube name for blue cube")
     catid = models.BigIntegerField(help_text="SAMI Galaxy ID")
     pa_gaskin = models.FloatField(blank=True, null=True, help_text="Gas kinematic position angle. Anticlockwise, North=0 degrees (deg)")

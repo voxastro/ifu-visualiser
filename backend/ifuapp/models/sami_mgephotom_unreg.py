@@ -15,6 +15,15 @@ from graphene.types.generic import GenericScalar
 from graphene_django_pagination import DjangoPaginationConnectionField
 
 
+class CubeSamiMgephotomUnreg(models.Model):
+    sami_mgephotom_unreg = models.ForeignKey('SamiMgephotomUnreg', on_delete=models.CASCADE)
+    cube = models.ForeignKey('Cube', on_delete=models.CASCADE)
+
+    class Meta:
+        managed = False
+        db_table = 'cube_sami_mgephotom_unreg'
+
+
 class SamiMGEPhotomUnreg(models.Model):
     """
     Results from Multi Gaussian Expansion fitting of imaging data.
@@ -42,8 +51,7 @@ class SamiMGEPhotomUnreg(models.Model):
         blank=True, null=True, help_text="Distance to nearest neighbour from SExtractor source extraction (arcsec).")
     chi2 = models.FloatField(blank=True, null=True,
                              help_text="Chi^2 from MGE fit.")
-    cube = models.ForeignKey('Cube', models.DO_NOTHING, db_column='cube',
-                             blank=True, null=True, related_name="sami_mgephotom_unreg")
+    cube = models.ManyToManyField('Cube', through='CubeSamiMgephotomUnreg', related_name='sami_mgephotom_unreg')
 
     class Meta:
         managed = False
