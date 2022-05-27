@@ -9,7 +9,8 @@ services:
       - POSTGRES_DB=ifu_db
       - POSTGRES_PASSWORD=postgres
     ports:
-      - 5432:5432
+      - 5435:5435
+    command: -p 5435
     healthcheck:
       test:
         ['CMD', 'sh', '-c', 'pg_isready -U $$POSTGRES_USER -h $$(hostname -i)']
@@ -23,7 +24,7 @@ services:
       - postgres
     build: ../backend/
     ports:
-      - '8080:8080'
+      - '8085:8085'
     volumes:
       - ../:/code
     environment:
@@ -33,7 +34,7 @@ services:
       - DB_NAME=ifu_db
       - DB_USER=ifu_user
       - DB_PASSWORD=postgres
-      - DB_PORT=5432
+      - DB_PORT=5435
       - SILKY_INTERCEPT_PERCENT=0
     command: bash -c "
       apt-get update -qq &&
@@ -45,7 +46,7 @@ services:
       python manage.py makemigrations &&
       python manage.py migrate --noinput &&
       python manage.py collectstatic --noinput --link -v 2 &&
-      gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8080 --timeout 180 --log-level debug --access-logfile - --error-logfile -"
+      gunicorn website.wsgi --reload --workers 1 --bind 0.0.0.0:8085 --timeout 180 --log-level debug --access-logfile - --error-logfile -"
 
   cypress:
     container_name: cypress
@@ -53,8 +54,8 @@ services:
     depends_on:
       - testserver
     environment:
-      - CYPRESS_baseUrl=http://testserver:8080
+      - CYPRESS_baseUrl=http://testserver:8085
     working_dir: /e2e
     volumes:
       - .:/e2e
-    entrypoint: bash -c "npx wait-on http://testserver:8080/api && cypress run"
+    entrypoint: bash -c "npx wait-on http://testserver:8085/api && cypress run"
