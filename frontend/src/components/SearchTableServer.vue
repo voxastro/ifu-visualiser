@@ -1,8 +1,7 @@
 <template>
   <q-table
     :rows="tableDataResults"
-    row-key="cube_id"
-    :rows-per-page-options="[10, 20, 30, 50, 100]"
+    :rows-per-page-options="[10, 20, 30, 50, 70, 100, 200, 300, 400, 500]"
     v-model:pagination="tablePagination"
     :loading="tableStatus === 'loading'"
     @request="onRequest"

@@ -95,24 +95,64 @@ export function fetchTable(ctx) {
   axios
     .get(url)
     .then(({ data }) => {
-      // First, expecting that query is param-search
       const results = data.results
 
-      const results_upd = results.map((row) => {
+      const results_upd = results.reduce((res, row) => {
+        let duplicatedFields = []
+
         const entries = tableColumnsTicked.map((column) => {
           const [table, field] = column.split('.')
           const key = table == 'cube' ? field : column
 
+          // check nested columns and its length
+          const nElementsInColumn =
+            table == 'cube' ? 1 : row[table] != null ? row[table].length : null
+
+          // if there is long column save this information
+          if (nElementsInColumn > 1) {
+            duplicatedFields.push({
+              key: key,
+              field: field,
+              nvals: nElementsInColumn,
+              vals: row[table],
+            })
+          }
+          console.log('row', row)
+          console.log('table', table)
+          console.log('key', key)
+          console.log('row[table]', row[table])
+          console.log(
+            'row[table] == []:',
+            row[table] == Array([]),
+            row[table]?.length == 0
+          )
           const value =
             table == 'cube'
               ? row[key]
-              : row[table] != null
-              ? row[table][field]
-              : null
+              : row[table] == null
+              ? null
+              : nElementsInColumn >= 1
+              ? row[table][0][field] // for nested fields as array many=True in serializer
+              : row[table][field] // for nested fields where many=False
+
           return [key, value]
         })
-        return Object.fromEntries(entries)
-      })
+
+        const objectRow = Object.fromEntries(entries)
+        res.push(objectRow)
+
+        // expand output results by duplicated values
+        console.log('duplicatedFields-->', duplicatedFields)
+        duplicatedFields.forEach((dupfld) => {
+          // skip first row which is already in res
+          dupfld.vals.slice(1).forEach((v) => {
+            const newObjectRow = { ...objectRow, [dupfld.key]: v[dupfld.field] }
+            res.push(newObjectRow)
+          })
+        })
+
+        return res
+      }, [])
 
       ctx.commit('setTableData', { ...data, results: results_upd })
 
@@ -122,9 +162,9 @@ export function fetchTable(ctx) {
       })
 
       ctx.commit('setTableStatus', 'loaded')
-      ctx.commit('setTableMessage', `${data.count} rows loaded`)
+      ctx.commit('setTableMessage', `${data.count} cubes found`)
       ctx.commit('addRowStream', {
-        msg: `${data.count} rows loaded.`,
+        msg: `${data.count} cubes found`,
         status: 'loaded',
       })
     })
@@ -176,7 +216,6 @@ export function loadSchema(ctx) {
       ctx.commit('setSchema', data)
 
       const tableObj = parseSchema(data)
-      console.log('HERrrr=====----->>>>', { tableObj })
       ctx.commit('setTableColumnsObject', tableObj)
     })
     .catch((error) => {

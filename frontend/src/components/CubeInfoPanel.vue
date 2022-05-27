@@ -44,21 +44,45 @@
         </q-tab-panel>
         <q-tab-panel v-for="t in tableNamesCubeFirst" :name="t" :key="t">
           {{ tableColumnsObject[t].description }}
-          <q-list dense style="max-height: 285px">
-            <div
-              v-for="col in tableColumnsObject[t].children"
-              :key="col.label"
-              class="inline-block q-px-sm"
+          <div v-if="Array.isArray(cube[t])">
+            <q-list
+              dense
+              style="max-height: 285px"
+              v-for="(tt, tt_idx) in cube[t]"
+              :key="tt_idx"
             >
-              <q-item-section>
-                <q-item-label caption>{{ col.label }}</q-item-label>
-                <q-item-label>{{ cube[t][col.label] }}</q-item-label>
-              </q-item-section>
-              <q-tooltip :delay="500" class="bg-grey-3 text-black">{{
-                col.description
-              }}</q-tooltip>
-            </div>
-          </q-list>
+              <div
+                v-for="col in tableColumnsObject[t].children"
+                :key="col.label"
+                class="inline-block q-px-sm"
+              >
+                <q-item-section>
+                  <q-item-label caption>{{ col.label }}</q-item-label>
+                  <q-item-label>{{ tt[col.label] }}</q-item-label>
+                </q-item-section>
+                <q-tooltip :delay="500" class="bg-grey-3 text-black">{{
+                  col.description
+                }}</q-tooltip>
+              </div>
+            </q-list>
+          </div>
+          <div v-else>
+            <q-list dense style="max-height: 285px">
+              <div
+                v-for="col in tableColumnsObject[t].children"
+                :key="col.label"
+                class="inline-block q-px-sm"
+              >
+                <q-item-section>
+                  <q-item-label caption>{{ col.label }}</q-item-label>
+                  <q-item-label>{{ cube[t][col.label] }}</q-item-label>
+                </q-item-section>
+                <q-tooltip :delay="500" class="bg-grey-3 text-black">{{
+                  col.description
+                }}</q-tooltip>
+              </div>
+            </q-list>
+          </div>
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
@@ -89,9 +113,30 @@ export default defineComponent({
       {}
     )
 
+    // console.log('=============== DEBUUUUGGG ====================')
+    // console.log(
+    //   tableNames.map((e) => {
+    //     console.log(
+    //       e,
+    //       e != 'cube' && cube.value[e],
+    //       cube.value[e],
+    //       Array.isArray(cube.value[e]),
+    //       Array.isArray(cube.value[e]) && cube.value[e].length > 0
+    //     )
+    //     if (Array.isArray(cube.value[e]) && cube.value[e].length > 0) {
+    //       console.log(cube.value[e], cube.value[e].length)
+    //     }
+    //   })
+    // )
+
     const tableNamesCubeFirst = [
       'cube',
-      ...tableNames.filter((e) => e != 'cube' && cube.value[e]),
+      ...tableNames.filter(
+        (e) =>
+          e != 'cube' &&
+          (cube.value[e] ||
+            (Array.isArray(cube.value[e]) && cube.value[e].length > 0))
+      ),
     ]
 
     const replaceNull = (value) => {

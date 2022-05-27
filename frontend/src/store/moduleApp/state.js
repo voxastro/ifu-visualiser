@@ -25,6 +25,7 @@ export default function () {
       'cube.exptime',
       'cube.manga_id',
       'cube.manga_plateifu',
+      'cube.sami_catid',
       'cube.sami_cubeidpub',
       'cube.califa_id',
       'cube.califa_name',
