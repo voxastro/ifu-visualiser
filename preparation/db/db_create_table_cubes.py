@@ -357,7 +357,7 @@ if __name__ == '__main__':
     # path_data = "/Users/ik52/obs/ifu-visualiser-data"
     ofile = 'table_cubes_test.csv'
 
-    path_manga = f"{path_data}/manga_dr16/spectro/redux/v2_4_3/*/stack/manga-*-LOGCUBE.fit*"
+    path_manga = f"{path_data}/manga_dr17/spectro/redux/MPL-11/*/stack/manga-*-LOGCUBE.fit*"
     path_sami = f"{path_data}/sami_dr3/*/*_cube_blue.fits*"
     path_califa = f"{path_data}/califa_dr3/*/reduced_v2.2/*rscube.fits*"
     path_atlas = f"{path_data}/atlas3d/MS_*.fits"

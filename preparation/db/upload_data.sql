@@ -600,12 +600,33 @@ UPDATE cube AS c SET sami_densitycat=t.catid FROM sami_densitycat AS t WHERE c.s
 ALTER TABLE cube ADD COLUMN sami_inputcat_clusters bigint REFERENCES sami_inputcat_clusters(catid);
 UPDATE cube AS c SET sami_inputcat_clusters=t.catid FROM sami_inputcat_clusters AS t WHERE c.sami_catid = t.catid;
 
-ALTER TABLE sami_mgephotom_unreg ADD COLUMN cube integer REFERENCES cube(cube_id);
-UPDATE sami_mgephotom_unreg AS t SET cube=c.cube_id FROM cube AS c WHERE c.sami_catid = t.catid;
+-------------------------------------------------------------------------------
+-- ALTER TABLE sami_mgephotom_unreg ADD COLUMN cube integer REFERENCES cube(cube_id);
+-- UPDATE sami_mgephotom_unreg AS t SET cube=c.cube_id FROM cube AS c WHERE c.sami_catid = t.catid;
 
+-- First create many-to-many table
+DROP TABLE IF EXISTS cube_sami_mgephotom_unreg CASCADE;
+CREATE TABLE cube_sami_mgephotom_unreg (
+  sami_mgephotom_unreg_id integer NOT NULL,
+  cube_id integer NOT NULL,
+  PRIMARY KEY (sami_mgephotom_unreg_id, cube_id),
+  FOREIGN KEY (sami_mgephotom_unreg_id) REFERENCES sami_mgephotom_unreg(ind),
+  FOREIGN KEY (cube_id) REFERENCES cube(cube_id)
+);
+
+INSERT INTO cube_sami_mgephotom_unreg
+SELECT s.ind, c.cube_id
+FROM
+    sami_mgephotom_unreg AS s, cube AS c
+WHERE
+    s.catid = c.sami_catid;
+
+ANALYZE cube_sami_mgephotom_unreg;
+-------------------------------------------------------------------------------
 
 ALTER TABLE sami_gaskin ADD COLUMN cube integer REFERENCES cube(cube_id);
-UPDATE sami_gaskin AS t SET cube=c.cube_id FROM cube AS c WHERE c.sami_catid = t.catid;
+UPDATE sami_gaskin AS t SET cube=c.cube_id FROM cube AS c WHERE c.sami_cubeidpub = t.cubeidpub;
+
 
 ALTER TABLE cube ADD COLUMN manga_drp varchar(11) REFERENCES manga_drp(plateifu);
 UPDATE cube AS c SET manga_drp=t.plateifu FROM manga_drp AS t WHERE c.manga_plateifu = t.plateifu;
