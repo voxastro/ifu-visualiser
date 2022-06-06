@@ -31,6 +31,7 @@ export default function () {
       'cube.califa_name',
       'cube.califa_cube',
       'cube.atlas_name',
+      'sami_mgephotom_unreg.photometry',
     ],
     cubeset: [],
     pointer: null,

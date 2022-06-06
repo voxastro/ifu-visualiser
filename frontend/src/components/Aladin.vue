@@ -64,7 +64,7 @@ import {
 } from 'vue'
 
 export default defineComponent({
-  name: 'Aladin',
+  name: 'AladinComp',
   props: {
     ra: { default: 10.0 },
     dec: { default: 15.0 },

@@ -55,7 +55,7 @@
 <script>
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import TableSettingsColumnSelector from 'components/TableSettingsColumnSelector'
+import TableSettingsColumnSelector from 'components/TableSettingsColumnSelector.vue'
 
 export default defineComponent({
   components: { TableSettingsColumnSelector },

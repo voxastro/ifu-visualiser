@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'Plotly',
+  name: 'PlotlyComp',
   props: ['traces', 'layout', 'config'],
   data: function () {
     return {

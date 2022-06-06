@@ -26,7 +26,7 @@ import { useStore } from 'vuex'
 import Plotly from 'src/components/Plotly.vue'
 
 export default defineComponent({
-  name: 'Spec',
+  name: 'SpecComp',
   components: { Plotly },
   setup() {
     const store = useStore()

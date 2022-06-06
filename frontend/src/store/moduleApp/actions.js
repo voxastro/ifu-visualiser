@@ -117,15 +117,15 @@ export function fetchTable(ctx) {
               vals: row[table],
             })
           }
-          console.log('row', row)
-          console.log('table', table)
-          console.log('key', key)
-          console.log('row[table]', row[table])
-          console.log(
-            'row[table] == []:',
-            row[table] == Array([]),
-            row[table]?.length == 0
-          )
+          // console.log('row', row)
+          // console.log('table', table)
+          // console.log('key', key)
+          // console.log('row[table]', row[table])
+          // console.log(
+          //   'row[table] == []:',
+          //   row[table] == Array([]),
+          //   row[table]?.length == 0
+          // )
           const value =
             table == 'cube'
               ? row[key]

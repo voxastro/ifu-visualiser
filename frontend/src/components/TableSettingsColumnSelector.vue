@@ -47,9 +47,6 @@
 <script>
 import { defineComponent, watch, ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter, useRoute } from 'vue-router'
-import { useQuery, useResult } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
 
 export default defineComponent({
   name: 'TableSettingsColumnSelector',

@@ -34,7 +34,7 @@ import DocsTablesInfo from '../components/DocsTablesInfo.vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
-  name: 'Docs',
+  name: 'DocsPage',
   components: { TocContent, DocsTablesInfo },
   setup() {
     const store = useStore()

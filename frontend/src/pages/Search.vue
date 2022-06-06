@@ -11,11 +11,11 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import SearchInput from 'components/SearchInput'
-import SearchTableServer from 'components/SearchTableServer'
+import SearchInput from 'components/SearchInput.vue'
+import SearchTableServer from 'components/SearchTableServer.vue'
 
 export default defineComponent({
-  name: 'Search',
+  name: 'SearchPage',
   components: { SearchInput, SearchTableServer },
 })
 </script>
