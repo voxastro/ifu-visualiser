@@ -8,7 +8,6 @@ from drf_yasg import openapi
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.conf import settings
-from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import routers
 # from ifuapp import representations as rep

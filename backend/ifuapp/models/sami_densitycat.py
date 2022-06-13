@@ -9,12 +9,6 @@ import serpy
 from ifuapp.pagination import EnhancedPageNumberPagination
 from ifuapp.utils import npl
 
-import graphene
-from graphene_django import DjangoObjectType, DjangoListField
-from graphene.types.generic import GenericScalar
-from graphene_django_pagination import DjangoPaginationConnectionField
-
-
 class SamiDensityCat(models.Model):
     """
     5th nearest neighbour surface density estimates.

@@ -5,11 +5,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers, viewsets, response
 from rest_flex_fields import FlexFieldsModelSerializer
 
-import graphene
-from graphene.types.generic import GenericScalar
-from graphene_django import DjangoObjectType
-from graphene_django_pagination import DjangoPaginationConnectionField
-
 from ifuapp.utils import npl
 from ifuapp.pagination import EnhancedPageNumberPagination
 
@@ -158,47 +153,3 @@ class CubeViewSet(viewsets.ReadOnlyModelViewSet):
         cube = get_object_or_404(queryset, pk=pk)
         serializer = self.serializer_class(cube, context={'request': request})
         return response.Response(serializer.data)
-
-
-###############################################################################
-# GraphQL
-
-# class CubeType(DjangoObjectType):
-#     class Meta:
-#         model = Cube
-#         description = Cube.__doc__
-#         filter_fields = ()
-#         fields = ("__all__")
-
-#     spectrum = GenericScalar(description=Cube.get_spectrum.__doc__)
-#     dist = GenericScalar(description="Distance from Cone center")
-
-#     def resolve_spectrum(self, info, **kwargs):
-#         return self.get_spectrum()
-
-#     def resolve_dist(self, info, **kwargs):
-#         try:
-#             return self.dist
-#         except:
-#             return None
-
-
-# class Query(graphene.ObjectType):
-#     cube = graphene.Field(CubeType, cube_id=graphene.Int(required=True))
-#     all_cubes = DjangoPaginationConnectionField(
-#         CubeType, query_string=graphene.String())
-
-#     def resolve_all_cubes(root, info, query_string=None, **kwargs):
-#         if query_string is not None:
-#             return apply_search(Cube.objects.all(), query_string)
-#         else:
-#             return Cube.objects.all()
-
-#     def resolve_cube(root, info, cube_id):
-#         try:
-#             return Cube.objects.get(cube_id=cube_id)
-#         except Cube.DoesNotExist:
-#             return None
-
-
-# schema_cube = graphene.Schema(query=Query)

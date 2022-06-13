@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.9
 COPY ./requirements.txt /code/
 RUN cd /code \
     && pip install -U pip \

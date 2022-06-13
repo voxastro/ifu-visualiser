@@ -7,7 +7,6 @@ whitenoise
 requests
 django-cors-headers
 git+https://github.com/ivan-katkov/django-custom-query.git#egg=django-custom-query
-git+https://github.com/instruct-br/graphene-django-pagination.git
 git+https://github.com/jazzband/django-silk.git
 django-filter
 djangorestframework
@@ -17,8 +16,5 @@ drf_ujson2
 drf-yasg
 django-rest-marshmallow
 drf-flex-fields
-graphene-django
-graphene-django-optimizer
-django-graphiql-debug-toolbar
 pglast
 sqlparse

@@ -29,6 +29,7 @@ DEBUG = os.getenv('DJANGO_DEBUG') == 'True'
 ALLOWED_HOSTS = [
     'api-ifu.voxastro.org',
     'api-ifu.sai.msu.ru',
+    'api', # for testing purpose
 ]
 
 # Application definition
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'graphene_django',
     'rest_framework',
     'silk',
     'ifuapp',
@@ -162,8 +162,11 @@ if DEBUG:
         "http://127.0.0.1",
         "http://127.0.0.1:8080",
         "http://127.0.0.1:8081",
+        "http://127.0.0.1:9000",
         "http://localhost:8080",
         "http://localhost:8081",
+        "http://localhost:9000",
+        "http://app:8088",
     ]
     ALLOWED_HOSTS += ['127.0.0.1', 'localhost', 'testserver']
 

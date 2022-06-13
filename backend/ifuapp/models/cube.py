@@ -7,11 +7,6 @@ from django.conf import settings
 from rest_framework import serializers, viewsets
 from rest_flex_fields import FlexFieldsModelSerializer
 
-import graphene
-from graphene.types.generic import GenericScalar
-from graphene_django import DjangoObjectType
-from graphene_django_pagination import DjangoPaginationConnectionField
-
 from ifuapp.utils import npl
 from ifuapp.pagination import EnhancedPageNumberPagination
 
