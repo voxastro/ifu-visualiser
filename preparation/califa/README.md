@@ -27,3 +27,8 @@ wget -r ftp://ftp.caha.es/CALIFA/docs/DR3/*
 ```
 
 For additional dataproducts, please, inspect `ftp://ftp.caha.es/CALIFA/`
+
+
+## eCALIFA (UPD 11/05/2023)
+
+To download all cubes in the eCALIFA release just dump out the page `http://ifs.astroscu.unam.mx/CALIFA/V500/v2.3/reduced_masked/` to the `list_eCALIFAv2.3.txt`.
