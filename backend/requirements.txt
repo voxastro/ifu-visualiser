@@ -6,7 +6,7 @@ gunicorn
 whitenoise
 requests
 django-cors-headers
-git+https://github.com/ivan-katkov/django-custom-query.git#egg=django-custom-query
+django-query-language
 git+https://github.com/jazzband/django-silk.git
 django-filter
 djangorestframework
