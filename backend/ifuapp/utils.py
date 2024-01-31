@@ -1,6 +1,6 @@
 from django.db.models.lookups import Lookup
 import numpy as np
-from customquery import Parser
+from querylanguage import Parser
 from django.db.models import F, Func, Value, BooleanField, FloatField
 from rest_framework import exceptions
 
