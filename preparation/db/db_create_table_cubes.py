@@ -294,7 +294,7 @@ if __name__ == '__main__':
     # path within the Docker container
     path_data = "/data"
     # path on laptop
-    path_data = "/Users/ik52/obs/ifu-visualiser-data"
+    #path_data = "/Users/ik52/obs/ifu-visualiser-data"
     ofile = 'table_cubes_test.csv'
 
     path_manga = f"{path_data}/manga_dr17/spectro/redux/MPL-11/*/stack/manga-*-LOGCUBE.fit*"
@@ -346,7 +346,7 @@ if __name__ == '__main__':
     multiproc = True
 
     if multiproc:
-        with Pool(5) as p:
+        with Pool(3) as p:
             rows = p.map(process_file, jobs)
     else:
         # useful mostly for debug purpose
