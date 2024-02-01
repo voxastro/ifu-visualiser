@@ -30,6 +30,8 @@ CREATE TABLE cube (
     califa_name     varchar(32),
     califa_cube     varchar(32),
     atlas_name      varchar(32),
+    bino_name       varchar(32),
+    bino_grating    varchar(32),
     fov_fits        real[][],
     fov_ifu         real[][]
 );

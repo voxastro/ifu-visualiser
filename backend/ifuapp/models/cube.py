@@ -24,8 +24,7 @@ def file_check(file):
 
 
 def wave_hdr(hdr, index='3'):
-    waves = hdr['CRVAL'+index] + hdr['CDELT'+index] * \
-        (np.arange(hdr['NAXIS'+index]) - hdr['CRPIX'+index] - 1)
+    waves = hdr['CRVAL'+index] + hdr['CDELT'+index] * (np.arange(hdr['NAXIS'+index]) - hdr['CRPIX'+index] - 1)
     return waves
 
 
@@ -90,6 +89,10 @@ class Cube(models.Model):
                                    help_text="Cube type of Califa survey target")
     atlas_name = models.CharField(max_length=32, blank=True, null=True,
                                   help_text="Galaxy name of Atlas3D survey target")
+    bino_name = models.CharField(max_length=32, blank=True, null=True,
+                                 help_text="Target name taken with Binospec-IFU")
+    bino_grating = models.CharField(max_length=32, blank=True, null=True,
+                                    help_text="Used disperser for Binospec-IFU observations")
     # This field type is a guess
     fov_fits = ArrayField(ArrayField(models.FloatField(blank=True, null=True)),
                           help_text="Coordinates of the rectangular area covered by cube fits file")
@@ -309,6 +312,39 @@ class Cube(models.Model):
                 output['status'] = "warning"
                 output['message'] = "The point is out of the cube field-of-view"
 
+        elif self.survey == 'bino':
+            file_cube = f"{settings.IFU_PATH}/Binospec_IFU/{self.filename}.fits"
+            file_cube = file_check(file_cube)
+
+            with fits.open(file_cube) as hdul:
+                hdr = hdul['IFU_CUBE'].header
+                flux = hdul['IFU_CUBE'].data
+                # err = hdul['STAT'].data
+
+            # STAT extension contains weird values equal to flux
+            err = np.full_like(flux, np.nan)
+
+            wave = wave_hdr(hdr)
+
+            w = WCS(hdr).dropaxis(-1)
+            sz = w.pixel_shape
+
+            ra, dec, arcsec_x, arcsec_y, pixel_x, pixel_y = \
+                get_pointer_coords(w, sz, ra, dec, arcsec_x, arcsec_y)
+
+            if (0 <= pixel_x < sz[0]) & (0 <= pixel_y < sz[1]):
+                flx = flux[:, pixel_y, pixel_x]
+                error = err[:, pixel_y, pixel_x]
+                wav = wave
+                yrange = [0, np.nanpercentile(flux[:, pixel_y, pixel_x], 99.9)]
+                output['spec'] = [
+                    dict(flux=npl(flx), error=npl(error), wave=npl(wav), yrange=npl(yrange))]
+                output['status'] = "ok"
+                output['message'] = ""
+            else:
+                output['spec'] = []
+                output['status'] = "warning"
+                output['message'] = "The point is out of the cube field-of-view."
         else:
             output['spec'] = []
             output['status'] = "error"
